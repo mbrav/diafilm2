@@ -1,0 +1,74 @@
+doctype html
+html(lang='en')
+
+    head
+
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        meta(name='description', content='')
+        meta(name='author', content='')
+
+        title Δиа Фильм² | К тайнам материи
+
+        link(rel='icon', type='image/x-icon', href='assets/favicon.ico')
+
+        include includes/css.pug
+
+    body
+
+        include includes/navbar.pug
+
+        // Page Header
+        header.masthead(style="background-image: url('assets/img/bg-5.jpg')")
+            .container.position-relative.px-4.px-lg-5
+                .row.gx-4.gx-lg-5.justify-content-center
+                    .col-md-11.col-lg-9.col-xl-8
+                        .post-heading
+                            
+                            h1 К тайнам материи
+                            h2.subheading Смотреть диафильм К тайнам материи, студия: Диафильм, год выпуска: 1973
+                            span.meta
+                                | Опубликовано
+                                a(href='#!') diafilm2
+                                | 24 сен. 2021
+        // Gallery Content
+        .mb-4
+            .container.px-4.px-lg-5
+                .row.gx-4.gx-lg-5.justify-content-center
+                    .col-md-11.col-lg-10.col-xl-9
+                        #carouselExampleControls.carousel.slide(data-bs-ride='carousel')
+                            .carousel-inner
+                                .carousel-item.active
+                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600110_01.jpg' alt='slide_1')
+                                .carousel-item
+                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600119_02.jpg' alt='slide_2')
+                                .carousel-item
+                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600209_03.jpg' alt='slide_3')
+                                .carousel-item
+                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600119_04.jpg' alt='slide_4')
+                                .carousel-item
+                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600189_05.jpg' alt='slide_5')
+                            button.carousel-control-prev(type='button' data-bs-target='#carouselExampleControls' data-bs-slide='prev')
+                                span.carousel-control-prev-icon(aria-hidden='true')
+                                span.visually-hidden Previous
+                            button.carousel-control-next(type='button' data-bs-target='#carouselExampleControls' data-bs-slide='next')
+                                span.carousel-control-next-icon(aria-hidden='true')
+                                span.visually-hidden Next
+                        span.caption.text-muted
+                            | Используйте кнопку ◀ и ▶ для навигации по слайдам.
+        // Post Content
+        article.mb-4
+            .container.px-4.px-lg-5
+                .row.gx-4.gx-lg-5.justify-content-center
+                    .col-md-11.col-lg-9.col-xl-8
+                        p
+                            | XX век стал веком поразительных открытий в физике. У Природы были вырваны глубочайшие тайны, и человеку стало ясно, что она устроена намного сложнее и парадоксальнее, чем мог представить себе самый изощренный ум.
+                        //- h2.section-heading The Final Frontier
+                        //- blockquote.blockquote
+                        //-     | The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.
+                        //- a(href='#!')
+                        //-     img.img-fluid(src='assets/img/post-sample-image.jpg', alt='...')
+
+        include includes/footer.pug
+
+        include includes/scripts.pug

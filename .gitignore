@@ -1,0 +1,110 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+media
+
+# Backup files #
+*.bak
+
+# Python #
+*.py[cod]
+*$py.class
+
+# Distribution / packaging #
+.Python build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+*.manifest
+*.spec
+
+# Installer logs #
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports #
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Visual Studio Code #
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history
+
+# pyenv #
+.python-version
+
+# Environments #
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Docker Storage #
+docker/data/*
+docker/log/*
+
+# Various media #
+img/*
+models.dot
+models.pdf
+
+# Stuff #
+*.backup
+rabbitmq/
+*.sqlite3
+backend/celerybeat-schedule
+
+# Jupyter notebook, scripts and tests #
+jupyter-notes/
+backend/api/tests/credentials.json
+backend/api/tests/token.json
+backend/api/tests/event-list.txt
+
+# Node #
+node_modules/
+package-lock.json
+temp/
+
+# Static files #
+backend/staticfiles
+os.path
+pytz
+datetime
+
+# Misc
+db-design.db
+db-design.sqbpro
+favicon_io.zip
+backend/db.sqlite3.7z
+backend/parsing/data.7z
+backend/parsing/html.7z
+backend/parsing/scrape.ipynb

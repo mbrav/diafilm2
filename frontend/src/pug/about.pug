@@ -1,0 +1,51 @@
+doctype html
+html(lang='en')
+
+    head
+
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        meta(name='description', content='')
+        meta(name='author', content='')
+
+        title Δиа Фильм² | О проекте
+
+        link(rel='icon', type='image/x-icon', href='assets/favicon.ico')
+
+        include includes/css.pug
+
+    body
+
+        include includes/navbar.pug
+
+        // Page Header
+        header.masthead(style="background-image: url('assets/img/bg-4.jpg')")
+            .container.position-relative.px-4.px-lg-5
+                .row.gx-4.gx-lg-5.justify-content-center
+                    .col-md-10.col-lg-8.col-xl-7
+                        .page-heading
+                            h1 О проекте
+                            span.subheading Δиа Фильм²
+
+        // Main Content
+        main.mb-4
+            .container.px-4.px-lg-5
+                .row.gx-4.gx-lg-5.justify-content-center
+                    .col-md-10.col-lg-8.col-xl-7
+                        p
+                            | «Δиа Фильм²» – это проект, который разрабатывался для курса
+                            a(href='https://praktikum.yandex.ru/') Яндекс Практикум
+                            |. Не исключено, что проект получит дальнейшее внимание и его развитие продолжится.
+                            | На данный момент проект будет сохранен в том виде, в котором он сейчас находится.
+                        p
+                            | Контент был взят с сайта
+                            a(href='https://diafilmy.su/') Diafilmy.su
+                            | и сформирован с использованием различных скриптов, код которых доступен здесь.
+                            | Сам проект «Δиа Фильм²» не связан никаким-либо образом с «Diafilmy.su».
+                            | Используемая тема:
+                            a(href='https://github.com/StartBootstrap/startbootstrap-clean-blog') Start Bootstrap - Clean Blog
+                            | .
+                
+        include includes/footer.pug
+
+        include includes/scripts.pug
