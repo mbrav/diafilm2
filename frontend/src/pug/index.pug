@@ -1,3 +1,4 @@
+| {% load static %}
 doctype html
 html(lang='en')
 
@@ -10,7 +11,7 @@ html(lang='en')
 
         title Δиа Фильм²
 
-        link(rel='icon', type='image/x-icon', href='assets/favicon.ico')
+        link(rel='icon', type='image/x-icon', href="{% static 'assets/favicon.ico' %}")
 
         include includes/css.pug
 
@@ -19,7 +20,7 @@ html(lang='en')
         include includes/navbar.pug
 
         // Page Header
-        header.masthead(style="background-image: url('assets/img/bg-3.jpg')")
+        header.masthead(style="background-image: url('/static/assets/img/bg-3.jpg')")
             .container.position-relative.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
                     .col-md-10.col-lg-8.col-xl-7
