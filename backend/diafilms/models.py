@@ -14,6 +14,15 @@ class Film(models.Model):
     quality = models.CharField(max_length=120, blank=True, null=True)
     description = models.CharField(max_length=120, blank=True, null=True)
 
+    cover = models.ForeignKey(
+        'Image',
+        blank=True,
+        null=True,
+        related_name='film_covers',
+        on_delete=models.CASCADE,
+        help_text='Films where the image is used as a cover.',
+    )
+
     def frames(self):
         return self.frames.all().count()
 
@@ -29,6 +38,7 @@ class Image(models.Model):
 
     url = models.CharField(
         max_length=255,
+        unique=False,
         blank=False,
     )
 
@@ -57,6 +67,7 @@ class Frame(Image):
     sequence = models.PositiveIntegerField(
         blank=True,
         null=True,
+        unique=False,
     )
 
     class Meta:

@@ -40,8 +40,6 @@ INSTALLED_APPS = [
 
     # Apps
     'diafilms',
-
-    'django_extensions',
 ]
 
 MIDDLEWARE = [

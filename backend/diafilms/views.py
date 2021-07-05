@@ -1,4 +1,9 @@
+import random
+
 from django.shortcuts import render
+from django.db.models import Max
+
+from diafilms.models import Film, Frame
 
 
 def home(request):
@@ -6,7 +11,17 @@ def home(request):
 
 
 def post(request):
-    return render(request, 'post.html', {'title': 'Δиа Фильм²'})
+    max_id = Film.objects.all().aggregate(max_id=Max("id"))['max_id']
+    while True:
+        pk = random.randint(1, max_id)
+        rand_film = Film.objects.get(pk=pk)
+
+        if rand_film:
+            frames = Frame.objects.filter(film_id=pk)
+            return render(
+                request, 'post.html',
+                {'post': rand_film, 'frames': frames}
+            )
 
 
 def about(request):
