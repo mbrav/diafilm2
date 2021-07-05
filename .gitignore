@@ -104,7 +104,7 @@ datetime
 db-design.db
 db-design.sqbpro
 favicon_io.zip
-backend/db.sqlite3.7z
-backend/parsing/data.7z
-backend/parsing/html.7z
+*.7z
+*.zip
 backend/parsing/scrape.ipynb
+backend/parsing/data/

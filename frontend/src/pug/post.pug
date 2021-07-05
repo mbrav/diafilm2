@@ -9,7 +9,7 @@ html(lang='en')
         meta(name='description', content='')
         meta(name='author', content='')
 
-        title Δиа Фильм² | К тайнам материи
+        title Δиа Фильм² | {{ post.name }}
 
         link(rel='icon', type='image/x-icon', href="{% static 'assets/favicon.ico' %}")
 
@@ -20,18 +20,17 @@ html(lang='en')
         include includes/navbar.pug
 
         // Page Header
-        header.masthead(style="background-image: url('/static/assets/img/bg-5.jpg')")
+        header.masthead(style="background-image: url('{{ post.cover.url }}')")
             .container.position-relative.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
                     .col-md-11.col-lg-9.col-xl-8
                         .post-heading
-                            
-                            h1 К тайнам материи
-                            h2.subheading Смотреть диафильм К тайнам материи, студия: Диафильм, год выпуска: 1973
+                        
+                            h1 {{ post.name }}
+                            h2.subheading {{ post.description }}
                             span.meta
-                                | Опубликовано
                                 a(href='#!') diafilm2
-                                | 24 сен. 2021
+                                | Год {{ post.year }}
         // Gallery Content
         .mb-4
             .container.px-4.px-lg-5
@@ -39,16 +38,15 @@ html(lang='en')
                     .col-md-11.col-lg-10.col-xl-9
                         #carouselExampleControls.carousel.slide(data-bs-ride='carousel')
                             .carousel-inner
+                                |{% for frame in frames %}
+                                |   {% if frame.sequence == 0 %}
                                 .carousel-item.active
-                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600110_01.jpg' alt='slide_1')
+                                    img.d-block.w-100(src='{{ frame.url }}' alt='Кадр №{{ frame.sequence }}')
+                                |   {% else %}
                                 .carousel-item
-                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600119_02.jpg' alt='slide_2')
-                                .carousel-item
-                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600209_03.jpg' alt='slide_3')
-                                .carousel-item
-                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600119_04.jpg' alt='slide_4')
-                                .carousel-item
-                                    img.d-block.w-100(src='https://diafilmy.su/uploads/posts/2021-04/1618600189_05.jpg' alt='slide_5')
+                                    img.d-block.w-100(src='{{ frame.url }}' alt='Кадр №{{ frame.sequence }}')
+                                |   {% endif %}
+                                |{% endfor %}
                             button.carousel-control-prev(type='button' data-bs-target='#carouselExampleControls' data-bs-slide='prev')
                                 span.carousel-control-prev-icon(aria-hidden='true')
                                 span.visually-hidden Previous
@@ -63,7 +61,46 @@ html(lang='en')
                 .row.gx-4.gx-lg-5.justify-content-center
                     .col-md-11.col-lg-9.col-xl-8
                         p
-                            | XX век стал веком поразительных открытий в физике. У Природы были вырваны глубочайшие тайны, и человеку стало ясно, что она устроена намного сложнее и парадоксальнее, чем мог представить себе самый изощренный ум.
+                            b
+                                | Название:
+                            i
+                                | «{{ post.name }}»
+                            br
+                            b
+                                | Студия:
+                            i
+                                | «{{ post.studio }}»
+                            br
+                            b
+                                | Год:
+                            i
+                                | «{{ post.year }}»
+                            br
+                            b
+                                | Цвет:
+                            i
+                                | «{{ post.color }}»
+                            br
+                            b
+                                | Индекс:
+                            i
+                                | «{{ post.index }}»
+                            br
+                            b
+                                | Номер:
+                            i
+                                | «{{ post.number }}»
+                            br
+                            b
+                                | Плёнка:
+                            i
+                                | «{{ post.film }}»
+                            br
+                            b
+                                | Качество:
+                            i
+                                | «{{ post.quality }}»
+                
                         //- h2.section-heading The Final Frontier
                         //- blockquote.blockquote
                         //-     | The dreams of yesterday are the hopes of today and the reality of tomorrow. Science has not yet mastered prophecy. We predict too much for the next year and yet far too little for the next ten.
