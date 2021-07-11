@@ -14,14 +14,24 @@ def post(request):
     max_id = Film.objects.all().aggregate(max_id=Max("id"))['max_id']
     while True:
         pk = random.randint(1, max_id)
-        rand_film = Film.objects.get(pk=pk)
+        film = Film.objects.get(pk=pk)
 
-        if rand_film:
+        if film:
             frames = Frame.objects.filter(film_id=pk).order_by('sequence')
             return render(
                 request, 'post.html',
-                {'post': rand_film, 'frames': frames}
+                {'post': film, 'frames': frames}
             )
+
+
+def post_detail(request, post_id):
+    film = Film.objects.get(pk=post_id)
+
+    frames = Frame.objects.filter(film_id=post_id).order_by('sequence')
+    return render(
+        request, 'post.html',
+        {'post': film, 'frames': frames}
+    )
 
 
 def about(request):
