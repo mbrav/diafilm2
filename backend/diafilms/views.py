@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render
 from django.db.models import Max
 
-from diafilms.models import Film, Frame
+from diafilms.models import Film, Frame, FilmCover
 
 
 def home(request):
@@ -17,7 +17,7 @@ def post(request):
         rand_film = Film.objects.get(pk=pk)
 
         if rand_film:
-            frames = Frame.objects.filter(film_id=pk)
+            frames = Frame.objects.filter(film_id=pk).order_by('sequence')
             return render(
                 request, 'post.html',
                 {'post': rand_film, 'frames': frames}

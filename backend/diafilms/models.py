@@ -14,15 +14,6 @@ class Film(models.Model):
     quality = models.CharField(max_length=120, blank=True, null=True)
     description = models.CharField(max_length=120, blank=True, null=True)
 
-    cover = models.ForeignKey(
-        'Image',
-        blank=True,
-        null=True,
-        related_name='film_covers',
-        on_delete=models.CASCADE,
-        help_text='Films where the image is used as a cover.',
-    )
-
     def frames(self):
         return self.frames.all().count()
 
@@ -76,6 +67,31 @@ class Frame(Image):
 
     def __str__(self):
         return "Frame #%s" % (self.id, )
+
+
+class FilmCover(models.Model):
+
+    film = models.OneToOneField(
+        Film,
+        related_name='cover',
+        on_delete=models.CASCADE,
+        help_text='Cover of the Film',
+    )
+
+    image = models.ForeignKey(
+        Image,
+        related_name='cover',
+        unique=False,
+        on_delete=models.CASCADE,
+        help_text='Image of the Film',
+    )
+
+    class Meta:
+        verbose_name = 'FilmCover'
+        verbose_name_plural = 'FilmCovers'
+
+    def __str__(self):
+        return "FilmCover #%s" % (self.id, )
 
 
 class Category(models.Model):

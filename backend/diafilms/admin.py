@@ -1,5 +1,5 @@
 from django.contrib import admin
-from diafilms.models import Film, Image, Frame, Category, Tag
+from diafilms.models import Film, Image, Frame, FilmCover, Category, Tag
 
 
 @admin.register(Film)
@@ -45,6 +45,20 @@ class Frame(admin.ModelAdmin):
     ordering = (
         'film',
         'sequence',
+    )
+
+
+@admin.register(FilmCover)
+class FilmCover(admin.ModelAdmin):
+    list_per_page = 100
+
+    list_display = (
+        'film',
+        'id',
+    )
+
+    ordering = (
+        'film',
     )
 
 
