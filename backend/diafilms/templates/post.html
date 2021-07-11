@@ -9,7 +9,6 @@
         <title>Δиа Фильм² | {{ post.name }}</title>
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
@@ -28,7 +27,6 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Home" %}'>Основная</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Post" %}'>Диафильм</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "About" %}'>О проекте</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Contact" %}'>Контакт</a></li>
                     </ul>
@@ -43,10 +41,7 @@
                         <div class="post-heading">
                             <h1>{{ post.name }}</h1>
                             <h2 class="subheading">{{ post.description }}</h2>
-                            <span class="meta">
-                                <a href="#!">diafilm2</a>
-                                Год {{ post.year }}
-                            </span>
+                            <span class="meta"><a href="/post/{{ post.id }}/">№ {{ post.id }}, Год {{ post.year }}</a></span>
                         </div>
                     </div>
                 </div>
@@ -84,34 +79,44 @@
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-11 col-lg-9 col-xl-8">
-                        <p>
-                            <b>Название:</b>
-                            <i>«{{ post.name }}»</i>
-                            <br />
-                            <b>Студия:</b>
-                            <i>«{{ post.studio }}»</i>
-                            <br />
-                            <b>Год:</b>
-                            <i>«{{ post.year }}»</i>
-                            <br />
-                            <b>Кадров:</b>
-                            <i>{{ frames.count }}</i>
-                            <br />
-                            <b>Цвет:</b>
-                            <i>«{{ post.color }}»</i>
-                            <br />
-                            <b>Индекс:</b>
-                            <i>«{{ post.index }}»</i>
-                            <br />
-                            <b>Номер:</b>
-                            <i>«{{ post.number }}»</i>
-                            <br />
-                            <b>Плёнка:</b>
-                            <i>«{{ post.film }}»</i>
-                            <br />
-                            <b>Качество:</b>
-                            <i>«{{ post.quality }}»</i>
-                        </p>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <p>
+                                        <b>Название:</b>
+                                        <i>«{{ post.name }}»</i>
+                                        <br />
+                                        <b>Студия:</b>
+                                        <i>«{{ post.studio }}»</i>
+                                        <br />
+                                        <b>Год:</b>
+                                        <i>«{{ post.year }}»</i>
+                                        <br />
+                                        <b>Кадров:</b>
+                                        <i>{{ frames.count }}</i>
+                                        <br />
+                                    </p>
+                                </div>
+                                <div class="col">
+                                    <p>
+                                        <b>Цвет:</b>
+                                        <i>«{{ post.color }}»</i>
+                                        <br />
+                                        <b>Индекс:</b>
+                                        <i>«{{ post.index }}»</i>
+                                        <br />
+                                        <b>Номер:</b>
+                                        <i>«{{ post.number }}»</i>
+                                        <br />
+                                        <b>Плёнка:</b>
+                                        <i>«{{ post.film }}»</i>
+                                        <br />
+                                        <b>Качество:</b>
+                                        <i>«{{ post.quality }}»</i>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

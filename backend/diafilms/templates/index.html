@@ -9,7 +9,6 @@
         <title>Δиа Фильм²</title>
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
@@ -28,7 +27,6 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ms-auto py-4 py-lg-0">
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Home" %}'>Основная</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Post" %}'>Диафильм</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "About" %}'>О проекте</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href='{% url "Contact" %}'>Контакт</a></li>
                     </ul>
@@ -43,6 +41,7 @@
                         <div class="site-heading">
                             <h1>Δиа Фильм²</h1>
                             <span class="subheading">Советские диафильмы, теперь на Django!</span>
+                            <a class="btn btn-primary mt-4" href='{% url "Post" %}'>Случайный Диафилмьм</a>
                         </div>
                     </div>
                 </div>
@@ -52,59 +51,18 @@
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
+                    {% for post in posts %}
                     <!-- Post preview-->
                     <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">К тайнам материи</h2>
-                            <h3 class="post-subtitle">Смотреть диафильм К тайнам материи, студия: Диафильм, год выпуска: 1973</h3>
+                        <a href="/post/{{ post.id }}/">
+                            <h2 class="post-title">{{ post.name }}</h2>
+                            <h3 class="post-subtitle">{{ post.description }}</h3>
                         </a>
-                        <p class="post-meta">
-                            Опубликовано
-                            <a href="#!">diafilm2</a>
-                            24 сен. 2021
-                        </p>
+                        <p class="post-meta">№ {{ post.id }}, Год {{ post.year }}</p>
                     </div>
                     <!-- Divider-->
                     <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html"><h2 class="post-title">Развитие феодального строя</h2></a>
-                        <p class="post-meta">
-                            Опубликовано
-                            <a href="#!">diafilm2</a>
-                            18 сен. 2021
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Почему у жирафа шея длинная, а рожки короткие</h2>
-                            <h3 class="post-subtitle">Смотреть диафильм Почему у жирафа шея длинная, а рожки короткие, студия: Диафильм, год выпуска: 1968</h3>
-                        </a>
-                        <p class="post-meta">
-                            Опубликовано
-                            <a href="#!">diafilm2</a>
-                            2 сен. 2021
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
-                    <!-- Post preview-->
-                    <div class="post-preview">
-                        <a href="post.html">
-                            <h2 class="post-title">Образ В. И. Ленина в литературе и в искусстве</h2>
-                            <h3 class="post-subtitle">Смотреть слайды Образ В. И. Ленина в литературе и в искусстве</h3>
-                        </a>
-                        <p class="post-meta">
-                            Опубликовано
-                            <a href="#!">diafilm2</a>
-                            21 авг. 2021
-                        </p>
-                    </div>
-                    <!-- Divider-->
-                    <hr class="my-4" />
+                    {% endfor %}
                     <!-- Pager-->
                     <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Старые Записи →</a></div>
                 </div>

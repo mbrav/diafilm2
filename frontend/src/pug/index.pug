@@ -27,69 +27,24 @@ html(lang='en')
                         .site-heading
                             h1 Δиа Фильм²
                             span.subheading Советские диафильмы, теперь на Django!
+                            a.btn.btn-primary.mt-4(href='{% url "Post" %}') Случайный Диафилмьм
 
         // Main Content
         .container.px-4.px-lg-5
             .row.gx-4.gx-lg-5.justify-content-center
                 .col-md-10.col-lg-8.col-xl-7
-
+                    |{% for post in posts %}
                     // Post preview
                     .post-preview
-                        a(href='post.html')
-                            h2.post-title
-                                | К тайнам материи
-                            h3.post-subtitle
-                                | Смотреть диафильм К тайнам материи, студия: Диафильм, год выпуска: 1973
+                        a(href='/post/{{ post.id }}/')
+                            h2.post-title {{ post.name }}
+                            h3.post-subtitle {{ post.description }}
                         p.post-meta
-                            | Опубликовано
-                            a(href='#!') diafilm2
-                            | 24 сен. 2021
+                            | № {{ post.id }}, Год {{ post.year }}
                     
                     // Divider
                     hr.my-4
-
-                    // Post preview
-                    .post-preview
-                        a(href='post.html')
-                            h2.post-title
-                                | Развитие феодального строя
-                        p.post-meta
-                            | Опубликовано
-                            a(href='#!') diafilm2
-                            | 18 сен. 2021
-                    
-                    // Divider
-                    hr.my-4
-
-                    // Post preview
-                    .post-preview
-                        a(href='post.html')
-                            h2.post-title
-                                | Почему у жирафа шея длинная, а рожки короткие
-                            h3.post-subtitle
-                                | Смотреть диафильм Почему у жирафа шея длинная, а рожки короткие, студия: Диафильм, год выпуска: 1968
-                        p.post-meta
-                            | Опубликовано
-                            a(href='#!') diafilm2
-                            | 2 сен. 2021
-
-                    // Divider
-                    hr.my-4
-
-                    // Post preview
-                    .post-preview
-                        a(href='post.html')
-                            h2.post-title
-                                | Образ В. И. Ленина в литературе и в искусстве
-                            h3.post-subtitle
-                                | Смотреть слайды Образ В. И. Ленина в литературе и в искусстве
-                        p.post-meta
-                            | Опубликовано
-                            a(href='#!') diafilm2
-                            | 21 авг. 2021
-                    
-                    // Divider
-                    hr.my-4
+                    |{% endfor %}
 
                     // Pager
                     .d-flex.justify-content-end.mb-4

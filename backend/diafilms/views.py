@@ -7,7 +7,8 @@ from diafilms.models import Film, Frame, FilmCover
 
 
 def home(request):
-    return render(request, 'index.html', {'title': 'Δиа Фильм²'})
+    latest_films = Film.objects.order_by('-id')[:10]
+    return render(request, 'index.html', {'title': 'Δиа Фильм²', 'posts': latest_films})
 
 
 def post(request):

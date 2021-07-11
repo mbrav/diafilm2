@@ -29,8 +29,9 @@ html(lang='en')
                             h1 {{ post.name }}
                             h2.subheading {{ post.description }}
                             span.meta
-                                a(href='#!') diafilm2
-                                | Год {{ post.year }}
+                                a(href='/post/{{ post.id }}/')
+                                    | № {{ post.id }},
+                                    | Год {{ post.year }}
         // Gallery Content
         .mb-4
             .container.px-4.px-lg-5
@@ -60,51 +61,56 @@ html(lang='en')
             .container.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
                     .col-md-11.col-lg-9.col-xl-8
-                        p
-                            b
-                                | Название:
-                            i
-                                | «{{ post.name }}»
-                            br
-                            b
-                                | Студия:
-                            i
-                                | «{{ post.studio }}»
-                            br
-                            b
-                                | Год:
-                            i
-                                | «{{ post.year }}»
-                            br
-                            b
-                                | Кадров:
-                            i
-                                | {{ frames.count }}
-                            br
-                            b
-                                | Цвет:
-                            i
-                                | «{{ post.color }}»
-                            br
-                            b
-                                | Индекс:
-                            i
-                                | «{{ post.index }}»
-                            br
-                            b
-                                | Номер:
-                            i
-                                | «{{ post.number }}»
-                            br
-                            b
-                                | Плёнка:
-                            i
-                                | «{{ post.film }}»
-                            br
-                            b
-                                | Качество:
-                            i
-                                | «{{ post.quality }}»
+                        .container
+                            .row
+                                .col
+                                    p
+                                        b
+                                            | Название:
+                                        i
+                                            | «{{ post.name }}»
+                                        br
+                                        b
+                                            | Студия:
+                                        i
+                                            | «{{ post.studio }}»
+                                        br
+                                        b
+                                            | Год:
+                                        i
+                                            | «{{ post.year }}»
+                                        br
+                                        b
+                                            | Кадров:
+                                        i
+                                            | {{ frames.count }}
+                                        br
+                                .col
+                                    p
+                                        b
+                                            | Цвет:
+                                        i
+                                            | «{{ post.color }}»
+                                        br
+                                        b
+                                            | Индекс:
+                                        i
+                                            | «{{ post.index }}»
+                                        br
+                                        b
+                                            | Номер:
+                                        i
+                                            | «{{ post.number }}»
+                                        br
+                                        b
+                                            | Плёнка:
+                                        i
+                                            | «{{ post.film }}»
+                                        br
+                                        b
+                                            | Качество:
+                                        i
+                                            | «{{ post.quality }}»
                 
                         //- h2.section-heading The Final Frontier
                         //- blockquote.blockquote
