@@ -19,7 +19,7 @@ html(lang='en')
 
         include includes/navbar.pug
 
-        // Page Header
+        // Шапка Страницы
         header.masthead(style="background-image: url('/static/assets/img/bg-3.jpg')")
             .container.position-relative.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
@@ -27,14 +27,14 @@ html(lang='en')
                         .site-heading
                             h1 Δиа Фильм²
                             span.subheading Советские диафильмы, теперь на Django!
-                            a.btn.btn-primary.mt-4(href='{% url "Post" %}') Случайный Диафилмьм
+                            a.btn.btn-dark.mt-4(href='{% url "Post" %}') Случайный Диафилмьм
 
-        // Main Content
+        // Основной Контент
         .container.px-4.px-lg-5
             .row.gx-4.gx-lg-5.justify-content-center
                 .col-md-10.col-lg-8.col-xl-7
                     |{% for post in posts %}
-                    // Post preview
+                    // Превью поста
                     .post-preview
                         a(href='/post/{{ post.id }}/')
                             h2.post-title {{ post.name }}
@@ -42,13 +42,13 @@ html(lang='en')
                         p.post-meta
                             | № {{ post.id }}, Год {{ post.year }}
                     
-                    // Divider
+                    // Разделитель
                     hr.my-4
                     |{% endfor %}
 
-                    // Pager
+                    // Страничник
                     .d-flex.justify-content-end.mb-4
-                        a.btn.btn-primary.text-uppercase(href='#!') Старые Записи →
+                        a.btn.btn-dark.text-uppercase(href='#!') Старые Записи →
         
         include includes/footer.pug
 

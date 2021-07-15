@@ -16,7 +16,7 @@
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
     </head>
     <body>
-        <!-- Navigation-->
+        <!-- Навигация, сгенерировано с помощью pug-->
         <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
             <div class="container px-4 px-lg-5">
                 <a class="navbar-brand" href='{% url "Home" %}'>Δиа Фильм²</a>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </nav>
-        <!-- Page Header-->
+        <!-- Шапка Страницы-->
         <header class="masthead" style="background-image: url('{{ post.cover.image.url }}')">
             <div class="container position-relative px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -47,14 +47,14 @@
                 </div>
             </div>
         </header>
-        <!-- Gallery Content-->
+        <!-- Галерея-->
         <div class="mb-4">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-11 col-lg-10 col-xl-9">
                         <div class="carousel slide" id="carouselExampleControls" data-bs-ride="carousel">
                             <div class="carousel-inner">
-                                {% for frame in frames %} {% if frame.sequence == 0 %}
+                                {% for frame in frames %} {% if forloop.first %}
                                 <div class="carousel-item active"><img class="d-block w-100" src="{{ frame.url }}" alt="Кадр №{{ frame.sequence }}" /></div>
                                 {% else %}
                                 <div class="carousel-item"><img class="d-block w-100" src="{{ frame.url }}" alt="Кадр №{{ frame.sequence }}" /></div>
@@ -74,7 +74,7 @@
                 </div>
             </div>
         </div>
-        <!-- Post Content-->
+        <!-- Контент Поста-->
         <article class="mb-4">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -121,7 +121,7 @@
                 </div>
             </div>
         </article>
-        <!-- Footer-->
+        <!-- Подвал, сгенерировано с помощью pug-->
         <footer class="border-top">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">

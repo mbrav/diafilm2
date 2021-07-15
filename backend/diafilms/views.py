@@ -1,5 +1,6 @@
 import random
 
+from django.http import Http404
 from django.shortcuts import render
 from django.db.models import Max
 
@@ -17,7 +18,7 @@ def post(request):
         pk = random.randint(1, max_id)
         film = Film.objects.get(pk=pk)
 
-        if film:
+        if film: 
             frames = Frame.objects.filter(film_id=pk).order_by('sequence')
             return render(
                 request, 'post.html',
@@ -26,7 +27,10 @@ def post(request):
 
 
 def post_detail(request, post_id):
-    film = Film.objects.get(pk=post_id)
+    try:
+        film = Film.objects.get(pk=post_id)
+    except Film.DoesNotExist:
+        raise Http404("Запись не существует")
 
     frames = Frame.objects.filter(film_id=post_id).order_by('sequence')
     return render(

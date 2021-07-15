@@ -19,7 +19,7 @@ html(lang='en')
 
         include includes/navbar.pug
 
-        // Page Header
+        // Шапка Страницы
         header.masthead(style="background-image: url('{{ post.cover.image.url }}')")
             .container.position-relative.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
@@ -32,7 +32,7 @@ html(lang='en')
                                 a(href='/post/{{ post.id }}/')
                                     | № {{ post.id }},
                                     | Год {{ post.year }}
-        // Gallery Content
+        // Галерея
         .mb-4
             .container.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
@@ -40,7 +40,7 @@ html(lang='en')
                         #carouselExampleControls.carousel.slide(data-bs-ride='carousel')
                             .carousel-inner
                                 |{% for frame in frames %}
-                                |   {% if frame.sequence == 0 %}
+                                |   {% if forloop.first %}
                                 .carousel-item.active
                                     img.d-block.w-100(src='{{ frame.url }}' alt='Кадр №{{ frame.sequence }}')
                                 |   {% else %}
@@ -56,7 +56,7 @@ html(lang='en')
                                 span.visually-hidden Next
                         span.caption.text-muted
                             | Используйте кнопку ◀ и ▶ для навигации по слайдам.
-        // Post Content
+        // Контент Поста
         article.mb-4
             .container.px-4.px-lg-5
                 .row.gx-4.gx-lg-5.justify-content-center
