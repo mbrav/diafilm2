@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Apps
     'diafilms',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +68,7 @@ ROOT_URLCONF = 'app.urls'
 
 TEMPLATES_DIRS = [
     BASE_DIR / 'templates/diafilms',
+    # BASE_DIR / 'templates/posts',
 ]
 
 TEMPLATES = [
