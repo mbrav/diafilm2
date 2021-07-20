@@ -67,8 +67,7 @@ INTERNAL_IPS = [
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES_DIRS = [
-    BASE_DIR / 'templates/diafilms',
-    # BASE_DIR / 'templates/posts',
+    BASE_DIR / 'templates',
 ]
 
 TEMPLATES = [

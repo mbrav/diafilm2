@@ -1,15 +1,15 @@
 // Навигация, сгенерировано с помощью pug
 nav#mainNav.navbar.navbar-expand-lg.navbar-light
     .container.px-4.px-lg-5
-        a.navbar-brand(href='{% url "Home" %}') Δиа Фильм²
+        a.navbar-brand(href='{% url "home" %}') Δиа Фильм²
         button.navbar-toggler(type='button', data-bs-toggle='collapse', data-bs-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
             | Меню
             i.fas.fa-bars
         #navbarResponsive.collapse.navbar-collapse
             ul.navbar-nav.ms-auto.py-4.py-lg-0
                 li.nav-item
-                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "Home" %}') Основная
+                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "home" %}') Основная
                 li.nav-item
-                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "About" %}') О проекте
+                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "about" %}') О проекте
                 li.nav-item
-                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "Contact" %}') Контакт
+                    a.nav-link.px-lg-3.py-3.py-lg-4(href='{% url "contact" %}') Контакт
