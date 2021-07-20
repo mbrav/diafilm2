@@ -6,7 +6,7 @@ const sh = require('shelljs');
 const prettier = require('prettier');
 
 module.exports = function renderPug(filePath) {
-    const destPath = filePath.replace(/src\/pug\//, '../backend/diafilms/templates/').replace(/\.pug$/, '.html');
+    const destPath = filePath.replace(/src\/pug\//, '../backend/templates/').replace(/\.pug$/, '.html');
     const srcPath = upath.resolve(upath.dirname(__filename), '../src');
 
     console.log(`### INFO: Rendering ${filePath} to ${destPath}`);
