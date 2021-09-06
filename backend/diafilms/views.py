@@ -9,7 +9,12 @@ from diafilms.models import Film, Frame, FilmCover
 
 def home(request):
     latest_films = Film.objects.order_by('-id')[:10]
-    return render(request, 'index.html', {'title': 'Δиа Фильм²', 'posts': latest_films})
+
+    context = {
+        'title': 'Δиа Фильм²',
+        'posts': latest_films,
+    }
+    return render(request, 'index.html', context)
 
 
 def post(request):
@@ -18,7 +23,7 @@ def post(request):
         pk = random.randint(1, max_id)
         film = Film.objects.get(pk=pk)
 
-        if film: 
+        if film:
             frames = Frame.objects.filter(film_id=pk).order_by('sequence')
             return render(
                 request, 'post.html',
