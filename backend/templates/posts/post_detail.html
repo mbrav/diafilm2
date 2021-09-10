@@ -1,0 +1,189 @@
+{% extends '../base.html' %}
+{% block title %}
+{{ post.id }}
+{% endblock %}
+{% block content %}
+{% load cache %}
+{% cache 6000 article_image post.id post.modified_at following %}
+{% if post.image %}
+{% load thumbnail %}
+{% thumbnail post.image "600x200" crop="center" as im %}
+<header class="masthead py-6" style="background-image: url('{{ im.url }}')">
+{% endthumbnail %}
+{% else %}
+<header class="masthead py-6" style="background-image: url('{{ post.cover.image.url }}')">
+{% endif %}
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-11 col-lg-9 col-xl-8">
+        <div class="post-heading">
+            <span class="meta">
+              <a href="{% url "posts:group_list" group_slug=post.group.slug %}{% if frames %}?diafilms=True{% endif %}" class="btn btn-outline-dark btn-sm">
+                Группа: <i>«{{ post.group.title }}»</i>
+              </a>
+              {% if frames %}
+              <a href='{% url "posts:diafilms_random" %}' class="btn btn-outline-dark btn-sm">
+                Случайный Диафилмьм
+              </a>
+              {% endif %}
+            </span>
+            {% if frames %}<h1>«{{ post.name }}»</h1>{% endif %}
+            <h2 class="subheading mb-3">Автор: {{ post.author.username }}
+              {% if post.author != user %}
+                {% if following %}
+                  <a href="{% url "posts:unfollow_user" username=post.author.username %}" class="btn btn-warning btn-sm" role="button">
+                    Отписаться
+                  </a>
+                {% else %}
+                  <a href="{% url "posts:follow_user" username=post.author.username %}" class="btn btn-success btn-sm" role="button">
+                    Подписаться
+                  </a>
+                {% endif %}
+              {% endif %}
+              <a href="{% url "posts:profile" username=post.author.username %}" class="btn btn-secondary btn-sm">
+                Посты автора
+                <span class="badge">
+                  {{ posts_by_user }}
+                </span>
+              </a>
+            </h2>
+            <h5>Дата публикации: {{ post.pub_date  }}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endcache %}
+<main class="mb-4">
+  {% if frames %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div
+          class="carousel slide"
+          id="carouselExampleControls"
+          data-bs-ride="carousel"
+        >
+          <div class="carousel-inner">
+            {% for frame in frames.all %} 
+            {% if forloop.first %}
+            <div class="carousel-item active">
+              <img
+                class="d-block w-100"
+                src="{{ frame.url }}"
+                alt="Кадр №{{ frame.sequence }}"
+              />
+            </div>
+            {% else %}
+            <div class="carousel-item">
+              <img
+                class="d-block w-100"
+                src="{{ frame.url }}"
+                alt="Кадр №{{ frame.sequence }}"
+              />
+            </div>
+            {% endif %} 
+            {% endfor %}
+          </div>
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev"
+          >
+            <span
+              class="carousel-control-prev-icon"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExampleControls"
+            data-bs-slide="next"
+          >
+            <span
+              class="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        <span class="caption text-muted">
+          Используйте кнопку ◀ и ▶ для навигации по слайдам.
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-11 col-lg-9 col-xl-8">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <p>
+                <b>Название:</b>
+                <i>«{{ post.name }}»</i>
+                <br />
+                <b>Студия:</b>
+                <i>«{{ post.studio }}»</i>
+                <br />
+                <b>Год:</b>
+                <i>«{{ post.year }}»</i>
+                <br />
+                <b>Кадров:</b>
+                <i>{{ frames.count }}</i>
+                <br />
+              </p>
+            </div>
+            <div class="col">
+              <p>
+                <b>Цвет:</b>
+                <i>«{{ post.color }}»</i>
+                <br />
+                <b>Индекс:</b>
+                <i>«{{ post.index }}»</i>
+                <br />
+                <b>Номер:</b>
+                <i>«{{ post.number }}»</i>
+                <br />
+                <b>Плёнка:</b>
+                <i>«{{ post.film }}»</i>
+                <br />
+                <b>Качество:</b>
+                <i>«{{ post.quality }}»</i>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mx-0">
+        {{ post.text|linebreaksbr }}
+        {% if is_edit %}
+        <div class="d-flex justify-content-end">
+          <!-- эта кнопка видна только автору -->
+          <a class="btn btn-sm btn-info mx-1" href="{% url "posts:post_edit" post_id=post.id %}">
+            Редактировать
+          </a>
+          <a class="btn btn-sm btn-danger mx-1" href="{% url "posts:post_delete" post_id=post.id %}">
+            Удалить
+          </a>
+        </div>
+        {% endif %}
+        {% cache 600 comments post.comments.all.count %}
+          {% include 'includes/comments.html' %}
+        {% endcache %}
+        {% cache 6000 comment_form post.id %}
+          {% include 'includes/comment_form.html' %}
+        {% endcache %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

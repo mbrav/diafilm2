@@ -1,0 +1,73 @@
+{% extends '../base.html' %}
+{% block title %}
+{{ group.title }}
+{% endblock %}
+{% block content %}
+{% load static %}
+{% load cache %}
+{% cache 6000 diafilm_list_header query %}
+<header
+  class="masthead py-6"
+  style="background-image: url('{% static 'img/bg/bg-4.jpg' %}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>
+            <span class="highlight-text-color">Δиа</span> Фильм²
+          </h1>
+          {% if query %}
+          <span class="subheading">
+            <b>Результаты пойска: </b>«{{ query }}»
+          </span>
+          {% else %}
+          <span class="subheading">
+            <b> {{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
+          </span>
+          {% endif%}
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+{% endcache %}
+<!-- Основной Контент-->
+<main class="mb-4">
+  <div class="container px-4 px-lg-5">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+      <form class="input-group input-group-lg mb-3" action="">
+        <input type="text" name="q" class="form-control" placeholder="Искать диафильм по названию">
+        <input type="submit" value="Искать">
+      </form>
+      {% include 'includes/paginator.html' %}
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Название</th>
+            <th scope="col">Студия</th>
+            <th scope="col">Год</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in page_obj %}
+          <tr>
+            <th scope="row">{{ post.id }}</th>
+            <td>
+              <a href="{% url "posts:post" post_id=post.id %}"><i>«{{ post.name }}»</i></a>
+            </td>
+            <td>
+              <a href="{% url "posts:post" post_id=post.id %}">{{ post.studio }}</a>
+            </td>
+            <td>
+              <a href="{% url "posts:post" post_id=post.id %}">{{ post.year }}</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% include 'includes/paginator.html' %}
+  </div>
+</main>
+{% endblock %}

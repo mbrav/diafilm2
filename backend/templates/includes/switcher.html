@@ -1,0 +1,29 @@
+<div class="row my-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a
+        class="nav-link {% if index %}active{% endif %}"
+        href="{% url 'posts:index' %}"
+      >
+        Все Записи
+      </a>
+    </li>
+    {% if user.is_authenticated %}
+    <li class="nav-item">
+      <a
+        class="nav-link {% if following %}active{% endif %}"
+        href="{% url 'posts:follow_list' %}"
+      >
+        Подписки
+      </a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <div class="btn-group btn-group" role="group" aria-label="Basic checkbox toggle button group">
+        <a class="btn btn-outline-primary" href=".">Посты</a>
+        <a class="btn btn-outline-primary" href="?diafilms=True">Диафильмы</a>
+        </a>
+      </div>
+    </li>
+  </ul>
+</div>

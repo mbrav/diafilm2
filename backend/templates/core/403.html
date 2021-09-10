@@ -1,0 +1,98 @@
+{% extends '../base.html' %}
+{% block title %}Ошибка 403{% endblock %}
+{% block content %}
+{% load cache %}
+{% cache 6000 error_403 %}
+{% load static %}
+<!-- Шапка Страницы-->
+<header
+  class="masthead py-6"
+  style="background-image: url('{% static 'img/bg/bg-1.jpg' %}')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>Ошибка <span class="highlight-text-color">403</span></h1>
+          <a class="btn btn-dark mt-4" href='{% url 'posts:index' %}'>
+            Идите на главную
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Основной Контент-->
+<main class="mb-4">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <figure>
+          <blockquote class="blockquote">
+            <p>
+            Мне скулы от досады сводит:</br>
+            Мне кажется который год,</br>
+            Что там, где я, — там жизнь проходит,</br>
+            А там, где нет меня, — идет!</br>
+            </p>
+
+            <p>
+            А дальше — больше, каждый день я</br>
+            Стал слышать злые голоса:</br>
+            "Где ты — там только наважденье,</br>
+            Где нет тебя — все чудеса.</br>
+            </p>
+
+            <p>
+            Ты только ждешь и догоняешь,</br>
+            Врешь и боишься не успеть,</br>
+            Смеешься меньше ты и, знаешь,</br>
+            Ты стал разучиваться петь!</br>
+            </p>
+
+            <p>
+            Как дым твои ресурсы тают,</br>
+            И сам швыряешь все подряд, -</br>
+            Зачем? Где ты — там не летают,</br>
+            А там, где нет тебя, — парят."</br>
+            </p>
+
+            <p>
+            Я верю крику, вою, лаю,</br>
+            Но все-таки, друзей любя,</br>
+            Дразнить врагов я не кончаю,</br>
+            С собой в побеге от себя.</br>
+            </p>
+
+            <p>
+            Живу, не ожидая чуда,</br>
+            Но пухнут жилы от стыда, -</br>
+            Я каждый раз хочу отсюда</br>
+            Сбежать куда-нибудь туда.</br>
+            </p>
+
+            <p>
+            Хоть все пропой, протарабань я,</br>
+            Хоть всем хоть голым покажись -</br>
+            Пустое все, — здесь — прозябанье,</br>
+            А где-то там — такая жизнь!..</br>
+            </p>
+
+            <p>
+            Фартило мне, Земля вертелась,</br>
+            И, взявши пары три белья,</br>
+            Я — шасть — и там! Но вмиг хотелось</br>
+            Назад, откуда прибыл я.</br>
+            </p>
+          </blockquote>
+          </br>
+          <figcaption class="blockquote-footer">
+            Владимир Высоцкий, 1979 г. </br><cite title="Source Title">Мне скулы от досады сводит…</cite>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</main>
+{% endcache %}
+{% endblock %}

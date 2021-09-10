@@ -1,43 +1,78 @@
+{% load static %}
 <!-- Навигация, сгенерировано с помощью pug-->
-<nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
-	<div class="container px-4 px-lg-5">
-		<a class="navbar-brand" href='{% url "home" %}'>Δиа Фильм²</a>
-		<button
-			class="navbar-toggler"
-			type="button"
-			data-bs-toggle="collapse"
-			data-bs-target="#navbarResponsive"
-			aria-controls="navbarResponsive"
-			aria-expanded="false"
-			aria-label="Toggle navigation"
-		>
-			Меню
-			<i class="fas fa-bars"></i>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarResponsive">
-			<ul class="navbar-nav ms-auto py-4 py-lg-0">
-				<li class="nav-item">
-					<a
-						class="nav-link px-lg-3 py-3 py-lg-4"
-						href='{% url "home" %}'
-						>Основная</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class="nav-link px-lg-3 py-3 py-lg-4"
-						href='{% url "about" %}'
-						>О проекте</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class="nav-link px-lg-3 py-3 py-lg-4"
-						href='{% url "contact" %}'
-						>Контакт</a
-					>
-				</li>
-			</ul>
-		</div>
-	</div>
+<nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
+  <div class="container px-4 px-lg-5">
+    <a class="navbar-brand" href='{% url "posts:index" %}'><span class="highlight-text-color">Δиа</span> Фильм²</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarResponsive"
+      aria-controls="navbarResponsive"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      Меню
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ms-auto py-4 py-lg-0">
+        <li class="nav-item"> 
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url "posts:diafilms_list" %}">Поиск</a> 
+        </li> 
+        {% if user.is_authenticated %}
+        <li class="nav-item"> 
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url "posts:follow_list" %}">Подписки</a> 
+        </li> 
+        <li class="nav-item"> 
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url "posts:post_create" %}"> 
+            Новая запись 
+          </a> 
+        </li> 
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "posts:profile" username=user.get_username %}">
+            {{ user.get_username }}
+            </a>
+        </li>
+        {% if user.is_superuser %}
+        <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="/admin">
+            Админка
+          </a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "users:password_change" %}">Изменить пароль</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "users:logout" %}">Выйти</a>
+        </li>
+        {% else %} 
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "users:login" %}">Войти</a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "users:signup" %}">Регистрация</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a
+            class="nav-link px-lg-3 py-3 py-lg-4"
+            href="{% url "about:author" %}">О проекте</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-lg-3 py-3 py-lg-4" href="{% url "about:contact" %}">Контакт</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>

@@ -1,3 +1,19 @@
-Django>=3.2.5
-django-debug-toolbar>=3.2.1
-flake8>=3.9.2
+# Production
+Django==3.2.7
+django-debug-toolbar==3.2.2
+mixer==7.1.2
+Pillow==8.3.2
+pytest==6.2.5
+pytest-django==4.4.0
+pytest-pythonpath==0.7.3
+requests==2.26.0
+six==1.16.0
+sorl-thumbnail==12.7.0
+django-environ==0.6.0
+
+## Development
+flake8==3.9.2
+autopep8==1.5.7
+# jupyter==1.0.0
+# jupyterthemes==0.20.0
+# transliterate==1.10.2

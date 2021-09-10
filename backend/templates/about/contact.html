@@ -1,0 +1,88 @@
+{% extends '../base.html' %}
+{% block title %}
+Δиа Фильм² | Технологии
+{% endblock %}
+{% load static %}
+{% load cache %}
+{% block content %}
+{% cache 6000 tech %}
+<!-- Шапка Страницы-->
+<header
+  class="masthead py-6"
+  style="background-image: url('{% static 'img/bg/bg-2.jpg' %}')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>Контакт</h1>
+          <span class="subheading">Есть Вопросы? Свяжитесь!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Основной Контент-->
+<main class="mb-4">
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <p>
+          Хотите с нами связаться? Заполните форму ниже, чтобы
+          отправить мне сообщение, и я свяжусь с вами как можно
+          скорее!
+        </p>
+        <div class="my-5">
+          <form>
+            <div class="form-floating">
+              <input
+                class="form-control"
+                id="name"
+                type="text"
+                placeholder="Enter your name..."
+              />
+              <label for="name">Имя</label>
+            </div>
+            <div class="form-floating">
+              <input
+                class="form-control"
+                id="email"
+                type="email"
+                placeholder="Enter your email..."
+              />
+              <label for="email">Адресс почты</label>
+            </div>
+            <div class="form-floating">
+              <input
+                class="form-control"
+                id="phone"
+                type="tel"
+                placeholder="Enter your phone number..."
+              />
+              <label for="phone">Телефон</label>
+            </div>
+            <div class="form-floating">
+              <textarea
+                class="form-control"
+                id="message"
+                placeholder="Enter your message here..."
+                style="height: 12rem"
+              ></textarea>
+              <label for="message">Сообщение</label>
+            </div>
+            <br/>
+            <button
+              class="btn btn-primary text-uppercase disabled"
+              id="submitButton"
+              type="submit"
+            >
+              Отправить
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endcache %}  
+{% endblock %}

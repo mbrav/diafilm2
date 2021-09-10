@@ -106,5 +106,5 @@ db-design.sqbpro
 favicon_io.zip
 *.7z
 *.zip
-backend/parsing/scrape.ipynb
+backend/parsing/
 backend/parsing/data/

@@ -1,0 +1,32 @@
+{% load static %}
+<div class="container mt-4 px-0">
+  <div class="row d-flex justify-content-left">
+    <div class="col-md-12">
+      <div class="card p-3 my-2">
+        <form method="post" class="comment_form" action="{% url "posts:add_comment" post_id=post.id %}">
+          <div class="d-flex">
+            <img src="{% static 'img/logo.png' %}" width="30" class="user-img rounded-circle mr-2">
+            <h5 class="mx-2">Добавить комментарий:</h5>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            {% csrf_token %}
+            <div class="form-group row my-3 p-3">
+              <label for="id_text">
+                Текст коммента
+                <span class="required text-danger">*</span>
+              </label>
+              {{ form.text }}
+              <small id="id_text-help" class="form-text text-muted">
+                {{ form.text.help_text }}
+              </small>
+            </div>
+          </div>
+          {% include "includes/form_errors.html" %}
+          <div class="action d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Добавить коммент</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

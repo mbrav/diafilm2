@@ -1,7 +1,8 @@
 from django.db import models
+from posts.models import Post
 
 
-class Film(models.Model):
+class Film(Post):
     name = models.CharField(max_length=120)
     url = models.CharField(max_length=255, blank=True, null=True)
     studio = models.CharField(max_length=120, blank=True, null=True)
@@ -10,22 +11,39 @@ class Film(models.Model):
     type = models.CharField(max_length=120, blank=True, null=True)
     index = models.CharField(max_length=120, blank=True, null=True)
     number = models.CharField(max_length=120, blank=True, null=True)
-    film = models.CharField(max_length=120, blank=True, null=True)
+    film_name = models.CharField(max_length=120, blank=True, null=True)
     quality = models.CharField(max_length=120, blank=True, null=True)
-    description = models.CharField(max_length=120, blank=True, null=True)
 
     def frames(self):
         return self.frames.all().count()
 
     class Meta:
-        verbose_name = 'Diafilm'
-        verbose_name_plural = 'Diafilms'
+        ordering = ('-id',)
+        verbose_name = 'Диафильм'
+        verbose_name_plural = 'Диафильмы'
 
     def __str__(self):
-        return "%s" % (self.name, )
+        return f'{self.name[:15]}'
 
 
 class Image(models.Model):
+
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата публикации картинки',
+        help_text='Укажите дату публикации картинки',
+    )
+
+    external = models.BooleanField(
+        default=True,
+        help_text="Укажите, если картинка внешняя",
+    )
+
+    image = models.ImageField(
+        'Картинка',
+        upload_to='images/',
+        blank=True
+    )
 
     url = models.CharField(
         max_length=255,
@@ -33,17 +51,12 @@ class Image(models.Model):
         blank=False,
     )
 
-    external = models.BooleanField(
-        default=True,
-        help_text="Set whether the image is external",
-    )
-
     class Meta:
-        verbose_name = 'Image'
-        verbose_name_plural = 'Images'
+        verbose_name = 'Картинка'
+        verbose_name_plural = 'Картинки'
 
     def __str__(self):
-        return "image #%s" % (self.id, )
+        return "Картинка #%s" % (self.id, )
 
 
 class Frame(Image):
@@ -52,7 +65,7 @@ class Frame(Image):
         Film,
         related_name='frames',
         on_delete=models.CASCADE,
-        help_text='Frames that the Film consists of',
+        help_text='Кадры из которых состоит Диафильм',
     )
 
     sequence = models.PositiveIntegerField(
@@ -62,11 +75,11 @@ class Frame(Image):
     )
 
     class Meta:
-        verbose_name = 'Frame'
-        verbose_name_plural = 'Frames'
+        verbose_name = 'Кадр'
+        verbose_name_plural = 'Кадры'
 
     def __str__(self):
-        return "Frame #%s" % (self.id, )
+        return "Кадр #%s" % (self.id, )
 
 
 class FilmCover(models.Model):
@@ -75,7 +88,7 @@ class FilmCover(models.Model):
         Film,
         related_name='cover',
         on_delete=models.CASCADE,
-        help_text='Cover of the Film',
+        help_text='Диафильм, к которому привязана обложка',
     )
 
     image = models.ForeignKey(
@@ -83,43 +96,12 @@ class FilmCover(models.Model):
         related_name='cover',
         unique=False,
         on_delete=models.CASCADE,
-        help_text='Image of the Film',
+        help_text='Картинка обложки',
     )
 
     class Meta:
-        verbose_name = 'FilmCover'
-        verbose_name_plural = 'FilmCovers'
+        verbose_name = 'Обложка диафильма'
+        verbose_name_plural = 'Обложки диафильмов'
 
     def __str__(self):
         return "FilmCover #%s" % (self.id, )
-
-
-class Category(models.Model):
-
-    name = models.CharField(max_length=32)
-
-    class Meta:
-        verbose_name = 'Category'
-        verbose_name_plural = 'Categories'
-
-    def __str__(self):
-        return "%s" % (self.name, )
-
-
-class Tag(models.Model):
-
-    name = models.CharField(max_length=64)
-
-    category = models.ForeignKey(
-        Category,
-        related_name='tags',
-        on_delete=models.CASCADE,
-        help_text='Tags that the Category has',
-    )
-
-    class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-
-    def __str__(self):
-        return "%s" % (self.name, )

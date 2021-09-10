@@ -1,0 +1,36 @@
+{% load cache %}
+{% cache 6000 card_thumbnail post post.modified_at %}
+<div class="col">
+  <div class="card shadow-sm">
+  {% if post.image %}
+    {% load thumbnail %}
+    {% thumbnail post.image "300x150" crop="center" as im %}
+    <img src="{{ im.url }}" class="card-img-top">
+    {% endthumbnail %}
+  {% else %}
+    <img src="{{ post.cover.image.url }}" class="card-img-top">
+  {% endif %}
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="user d-flex flex-row align-items-center">
+          {% if diafilms %}
+          <h5 class="card-title"><i>{{ post.name }}</i></h5>
+          {% else %}
+          <h5 class="card-title">
+            <a href="{% url "posts:profile" username=post.author.username %}">Автор: {{ post.author }}</a>
+          </h5>
+          {% endif %}
+        </div>
+      </div>
+      <h6 class="card-subtitle mb-2 text-muted">{{ post.pub_date }}</h6>
+      <p class="card-text">{{ post.text|truncatewords:30 }}</p>
+      <div class="btn-group">
+        <a class="btn btn-sm btn-outline-secondary" href="{% url "posts:post" post_id=post.id %}">подробная информация</a>
+        {% if post.group %}
+          <a class="btn btn-sm btn-outline-dark" href="{% url "posts:group_list" group_slug=post.group.slug %}{% if diafilms %}?diafilms=True{% endif %}">все записи группы</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endcache %}

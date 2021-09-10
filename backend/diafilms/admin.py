@@ -1,31 +1,35 @@
 from django.contrib import admin
-from diafilms.models import Film, Image, Frame, FilmCover, Category, Tag
+from diafilms.models import Film, Image, Frame, FilmCover
 
 
 @admin.register(Film)
 class Film(admin.ModelAdmin):
     list_per_page = 100
     list_display = (
-        'name',
-        'studio',
-        'year',
-        # 'frames',
         'id',
+        'name',
+        'pub_date',
+        'modified_at',
+        'year',
     )
 
     search_fields = (
+        'id',
         'name',
-        'studio',
     )
 
     ordering = (
         '-id',
     )
 
+    empty_value_display = '-пусто-'
+
 
 @admin.register(Image)
 class Image(admin.ModelAdmin):
     list_per_page = 100
+
+    empty_value_display = '-пусто-'
 
 
 @admin.register(Frame)
@@ -33,9 +37,9 @@ class Frame(admin.ModelAdmin):
     list_per_page = 100
 
     list_display = (
+        'id',
         'film',
         'sequence',
-        'id',
     )
 
     search_fields = (
@@ -46,6 +50,8 @@ class Frame(admin.ModelAdmin):
         'film',
         'sequence',
     )
+
+    empty_value_display = '-пусто-'
 
 
 @admin.register(FilmCover)
@@ -53,46 +59,12 @@ class FilmCover(admin.ModelAdmin):
     list_per_page = 100
 
     list_display = (
-        'film',
         'id',
-    )
-
-    ordering = (
         'film',
     )
 
-
-@admin.register(Category)
-class Category(admin.ModelAdmin):
-    list_per_page = 100
-
-    list_display = (
-        'name',
-        'id',
-    )
-
     ordering = (
-        'name',
-        'id',
+        'film',
     )
 
-
-@admin.register(Tag)
-class Tag(admin.ModelAdmin):
-    list_per_page = 100
-
-    list_display = (
-        'name',
-        'category',
-        'id',
-    )
-
-    search_fields = (
-        'name',
-        'category',
-    )
-
-    ordering = (
-        'category',
-        'name',
-    )
+    empty_value_display = '-пусто-'

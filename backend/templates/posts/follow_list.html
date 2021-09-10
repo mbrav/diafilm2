@@ -1,0 +1,43 @@
+{% extends '../base.html' %}
+{% block title %}
+{{ group.title }}
+{% endblock %}
+{% load static %}
+{% block content %}
+<!-- Шапка Страницы-->
+<header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-3.jpg' %}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>
+            <span class="highlight-text-color">Ваши</span> подписки
+          </h1>
+          <span class="subheading"><b>Всего подписок: {{ following|length }}</b></span>
+          <span class="subheading"><b>Всего {% if diafilms %}диафильмов{% else %}постов{% endif %}: {{ page_obj.paginator.count }}</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Основной Контент-->
+<main class="mb-4">
+  <div class="container px-4 px-lg-5">
+  {% include 'includes/switcher.html' %}
+    {% if following|length == 0 %}
+      <h2 class="display-2">У вас пока нет подписок!</h1>
+    {% else %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+      {% for post in page_obj %}
+        {% include 'includes/post_card.html' %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% if diafilms %}
+    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% else %}
+    {% include 'includes/paginator.html' %}
+  {% endif %}
+  </div>
+</main>
+{% endblock %}

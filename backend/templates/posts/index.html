@@ -1,0 +1,59 @@
+{% extends '../base.html' %}
+{% block title %}
+Последние обновления на сайте
+{% endblock %}
+{% load static %}
+{% block content %}
+<!-- Шапка Страницы-->
+<header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-3.jpg' %}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {% if diafilms %}
+        <div class="site-heading">
+          <h1>
+            <span class="highlight-text-color">Δиа</span> Фильм²
+          </h1>
+          <span class="subheading">
+            <b> {{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
+          </span>
+          <a class="btn btn-dark mt-4" href='{% url "posts:diafilms_random" %}'>
+            Случайный Диафилмьм
+          </a>
+        </div>
+        {% else %}
+        <div class="site-heading">
+          <h1>
+            <span class="highlight-text-color">Δиа</span> Фильм²
+          </h1>
+          <span class="subheading">
+            <b>Посты всех пользователей</b>
+          </span>
+          <span class="subheading">
+            Всего постов: {{ page_obj.paginator.count }}
+          </span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Основной Контент-->
+<main class="mb-4">
+  <div class="container px-4 px-lg-5">
+  {% include 'includes/switcher.html' %}
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+    {% for post in page_obj %}
+      {% include 'includes/post_card.html' %}
+    {% endfor %}
+  </div>
+  {% if diafilms %}
+    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% else %}
+    {% include 'includes/paginator.html' %}
+  {% endif %}
+  </div>
+</main>
+{% endblock %}
+
+
