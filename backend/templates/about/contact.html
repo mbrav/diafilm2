@@ -33,49 +33,27 @@
           скорее!
         </p>
         <div class="my-5">
-          <form>
+          <form method="post">
+            {% csrf_token %}
             <div class="form-floating">
-              <input
-                class="form-control"
-                id="name"
-                type="text"
-                placeholder="Enter your name..."
-              />
-              <label for="name">Имя</label>
+              {{ form.name }}
+              <label for="id_name">{{ form.name.label }}</label>
             </div>
             <div class="form-floating">
-              <input
-                class="form-control"
-                id="email"
-                type="email"
-                placeholder="Enter your email..."
-              />
-              <label for="email">Адресс почты</label>
+              {{ form.email }}
+              <label for="id_email">{{ form.email.label }}</label>
             </div>
             <div class="form-floating">
-              <input
-                class="form-control"
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone number..."
-              />
-              <label for="phone">Телефон</label>
+              {{ form.subject }}
+              <label for="id_subject">{{ form.subject.label }}</label>
             </div>
             <div class="form-floating">
-              <textarea
-                class="form-control"
-                id="message"
-                placeholder="Enter your message here..."
-                style="height: 12rem"
-              ></textarea>
-              <label for="message">Сообщение</label>
+              {{ form.message }}
+              <label for="id_message">{{ form.message.label }}</label>
             </div>
+            {% include "includes/form_errors.html" %}
             <br/>
-            <button
-              class="btn btn-primary text-uppercase disabled"
-              id="submitButton"
-              type="submit"
-            >
+            <button type="submit" class="btn btn-primary text-uppercase">
               Отправить
             </button>
           </form>
