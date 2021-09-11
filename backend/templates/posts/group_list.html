@@ -24,7 +24,7 @@
         <div class="page-heading">
           <h1><span class="highlight-text-color">Группа </span>«{{ group.title }}»</h1>
           <p>{{group.description}}</p>
-          <span class="subheading"><b>Всего {% if diafilms %}диафильмов{% else %}постов{% endif %}: {{ page_obj.paginator.count }}</b></span>
+          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
         </div>
       </div>
     </div>
@@ -40,8 +40,8 @@
         {% include 'includes/post_card.html' %}
       {% endfor %}
     </div>
-  {% if diafilms %}
-    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% if post_view %}
+    {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
   {% else %}
     {% include 'includes/paginator.html' %}
   {% endif %}

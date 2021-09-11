@@ -11,24 +11,24 @@ from diafilms.models import Film
 
 # @cache_page(60)
 def index(request):
-    diafilms = request.GET.get('diafilms')
+    post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
     post_list = None
-    if diafilms:
-        post_list = Film.objects.select_related(
-            'group', 'author', 'cover').all().order_by('-id')
-    else:
+    if post_view:
         films = Film.objects.all().values_list('id')
         post_list = Post.objects.select_related('group', 'author').exclude(
             id__in=films).all().order_by('-pub_date')
+    else:
+        post_list = Film.objects.select_related(
+            'group', 'author', 'cover').all().order_by('-id')
 
     paginator = Paginator(post_list, 10)
     page = paginator.get_page(page_number)
 
     context = {
         'page_obj': page,
-        'diafilms': diafilms,
+        'post_view': post_view,
         'index': True,
     }
 
@@ -36,18 +36,18 @@ def index(request):
 
 
 def profile(request, username):
-    diafilms = request.GET.get('diafilms')
+    post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
     author = get_object_or_404(User, username=username)
     post_list = None
-    if diafilms:
+    if post_view:
+        films = Film.objects.all().values_list('id')
+        post_list = Post.objects.select_related('group', 'author').exclude(
+            id__in=films).filter(author=author).order_by('-pub_date')
+    else:
         post_list = Film.objects.select_related(
             'group', 'author', 'cover').filter(author=author).order_by('-id')
-    else:
-        films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related(
-            'group', 'author').filter(author=author).exclude(id__in=films).order_by('-pub_date')
 
     following = False
     if request.user.is_authenticated:
@@ -59,7 +59,7 @@ def profile(request, username):
 
     context = {
         'page_obj': page,
-        'diafilms': diafilms,
+        'post_view': post_view,
         'author': author,
         'following': following,
     }
@@ -68,26 +68,26 @@ def profile(request, username):
 
 
 def group_list(request, group_slug):
-    diafilms = request.GET.get('diafilms')
+    post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
     group = get_object_or_404(Group, slug=group_slug)
 
     post_list = None
-    if diafilms:
+    if post_view:
+        films = Film.objects.all().values_list('id')
+        post_list = Post.objects.select_related('group', 'author').exclude(
+            id__in=films).filter(group=group).order_by('-pub_date')
+    else:
         post_list = Film.objects.select_related(
             'group', 'author', 'cover').filter(group=group).order_by('-id')
-    else:
-        films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('group', 'author').filter(
-            group=group).exclude(id__in=films).order_by('-pub_date')
 
     paginator = Paginator(post_list, 10)
     page = paginator.get_page(page_number)
 
     context = {
         'page_obj': page,
-        'diafilms': diafilms,
+        'post_view': post_view,
         'group': group,
     }
 
@@ -235,13 +235,13 @@ def delete_comment(request, post_id, comment_id):
 
 @login_required(login_url='/auth/login/')
 def follow_index(request):
-    diafilms = request.GET.get('diafilms')
+    post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
     usernames = Follow.objects.filter(
         user=request.user).values_list('author')
     post_list = None
-    if diafilms:
+    if post_view:
         post_list = Film.objects.select_related('group', 'author', 'cover').filter(
             author__in=usernames).order_by('-id')
     else:
@@ -254,7 +254,7 @@ def follow_index(request):
 
     context = {
         'page_obj': page,
-        'diafilms': diafilms,
+        'post_view': post_view,
         'following': usernames,
     }
 

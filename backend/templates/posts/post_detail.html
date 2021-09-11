@@ -18,7 +18,7 @@
       <div class="col-md-11 col-lg-9 col-xl-8">
         <div class="post-heading">
             <span class="meta">
-              <a href="{% url "posts:group_list" group_slug=post.group.slug %}{% if frames %}?diafilms=True{% endif %}" class="btn btn-outline-dark btn-sm">
+              <a href="{% url "posts:group_list" group_slug=post.group.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-outline-dark btn-sm">
                 Группа: <i>«{{ post.group.title }}»</i>
               </a>
               {% if frames %}

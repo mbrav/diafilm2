@@ -9,19 +9,7 @@
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
-        {% if diafilms %}
-        <div class="site-heading">
-          <h1>
-            <span class="highlight-text-color">Δиа</span> Фильм²
-          </h1>
-          <span class="subheading">
-            <b> {{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
-          </span>
-          <a class="btn btn-dark mt-4" href='{% url "posts:diafilms_random" %}'>
-            Случайный Диафилмьм
-          </a>
-        </div>
-        {% else %}
+        {% if post_view %}
         <div class="site-heading">
           <h1>
             <span class="highlight-text-color">Δиа</span> Фильм²
@@ -32,6 +20,18 @@
           <span class="subheading">
             Всего постов: {{ page_obj.paginator.count }}
           </span>
+        </div>
+        {% else %}
+        <div class="site-heading">
+          <h1>
+            <span class="highlight-text-color">Δиа</span> Фильм²
+          </h1>
+          <span class="subheading">
+            <b> {{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
+          </span>
+          <a class="btn btn-dark mt-4" href='{% url "posts:diafilms_random" %}'>
+            Случайный Диафилмьм
+          </a>
         </div>
         {% endif %}
       </div>
@@ -47,8 +47,8 @@
       {% include 'includes/post_card.html' %}
     {% endfor %}
   </div>
-  {% if diafilms %}
-    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% if post_view %}
+    {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
   {% else %}
     {% include 'includes/paginator.html' %}
   {% endif %}

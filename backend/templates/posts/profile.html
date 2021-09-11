@@ -19,7 +19,7 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
-          <h1>Все {% if diafilms %}диафильмы{% else %}посты{% endif %} пользователя <span class="highlight-text-color">{{ author.username }}</span>
+          <h1>Все {% if post_view %}посты{% else %}диафильмы{% endif %} пользователя <span class="highlight-text-color">{{ author.username }}</span>
            {% if author != user %}
             <span>
             {% if following %}
@@ -30,7 +30,7 @@
             </span>
           {% endif %}
           </h1>
-          <span class="subheading"><b>Всего {% if diafilms %}диафильмов{% else %}постов{% endif %}: </b>{{ page_obj.paginator.count }}</span>
+          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: </b>{{ page_obj.paginator.count }}</span>
         </div>
       </div>
     </div>
@@ -46,8 +46,8 @@
         {% include 'includes/post_card.html' %}
       {% endfor %}
     </div>
-  {% if diafilms %}
-    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% if post_view %}
+    {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
   {% else %}
     {% include 'includes/paginator.html' %}
   {% endif %}

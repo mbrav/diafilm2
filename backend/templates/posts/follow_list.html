@@ -14,7 +14,7 @@
             <span class="highlight-text-color">Ваши</span> подписки
           </h1>
           <span class="subheading"><b>Всего подписок: {{ following|length }}</b></span>
-          <span class="subheading"><b>Всего {% if diafilms %}диафильмов{% else %}постов{% endif %}: {{ page_obj.paginator.count }}</b></span>
+          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
         </div>
       </div>
     </div>
@@ -33,8 +33,8 @@
       {% endfor %}
     </div>
     {% endif %}
-  {% if diafilms %}
-    {% include 'includes/paginator.html' with url_vars="&diafilms=True" %}
+  {% if post_view %}
+    {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
   {% else %}
     {% include 'includes/paginator.html' %}
   {% endif %}
