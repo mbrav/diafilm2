@@ -23,7 +23,7 @@ def index(request):
         post_list = Film.objects.select_related(
             'group', 'author', 'cover').all().order_by('-id')
 
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
 
     context = {
@@ -54,7 +54,7 @@ def profile(request, username):
         following = Follow.objects.filter(
             user=request.user, author=author).first() is not None
 
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
 
     context = {
@@ -82,7 +82,7 @@ def group_list(request, group_slug):
         post_list = Film.objects.select_related(
             'group', 'author', 'cover').filter(group=group).order_by('-id')
 
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
 
     context = {
@@ -104,7 +104,7 @@ def diafilms(request):
     else:
         post_list = Film.objects.all().order_by('id')
 
-    paginator = Paginator(post_list, 100)
+    paginator = Paginator(post_list, 120)
     page = paginator.get_page(page_number)
 
     context = {
@@ -249,7 +249,7 @@ def follow_index(request):
         post_list = Post.objects.select_related('group', 'author').filter(
             author__in=usernames).exclude(id__in=films).order_by('-pub_date')
 
-    paginator = Paginator(post_list, 10)
+    paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
 
     context = {
