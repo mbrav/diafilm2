@@ -20,8 +20,8 @@
     {% endif %}
     <li class="nav-item">
       <div class="btn-group btn-group" role="group" aria-label="Basic checkbox toggle button group">
-        <a class="btn btn-outline-primary" href=".">Диафильмы</a>
-        <a class="btn btn-outline-primary" href="?post_view=True">Посты</a>
+        <a class="btn btn{% if post_view %}-outline-{% else %}-{% endif %}primary" href=".">Диафильмы</a>
+        <a class="btn btn{% if post_view %}-{% else %}-outline-{% endif %}primary" href="?post_view=True">Посты</a>
         </a>
       </div>
     </li>
