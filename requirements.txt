@@ -11,6 +11,11 @@ six==1.16.0
 sorl-thumbnail==12.7.0
 django-environ==0.6.0
 
+# For gmail support
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
 ## Development
 flake8==3.9.2
 autopep8==1.5.7
