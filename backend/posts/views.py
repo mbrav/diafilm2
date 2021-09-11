@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
+from django.db.models import Q
 
 from .forms import CommentForm, PostForm
 from .models import Comment, Follow, Group, Post, User
@@ -100,11 +101,16 @@ def diafilms(request):
 
     post_list = None
     if query:
-        post_list = Film.objects.filter(name__icontains=query).order_by('id')
+        # SQLite workaround 
+        # Ref: https://docs.djangoproject.com/en/dev/ref/databases/#substring-matching-and-case-sensitivity 
+        q_low = query.lower()
+        q_cap = query.capitalize()
+        post_list = Film.objects.filter(
+            Q(name__icontains=q_low) | Q(name__icontains=q_cap)).order_by('id')
     else:
         post_list = Film.objects.all().order_by('id')
 
-    paginator = Paginator(post_list, 120)
+    paginator = Paginator(post_list, 100)
     page = paginator.get_page(page_number)
 
     context = {

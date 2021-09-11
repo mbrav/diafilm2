@@ -18,7 +18,10 @@
           </h1>
           {% if query %}
           <span class="subheading">
-            <b>Результаты пойска: </b>«{{ query }}»
+            Результаты пойска: <b>«{{ query }}»</b>
+          </span>
+          <span class="subheading">
+            Найдено <b>{{ page_obj.paginator.count }}</b> результатов
           </span>
           {% else %}
           <span class="subheading">
