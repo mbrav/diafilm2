@@ -15,7 +15,7 @@
 {% endif %}
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-11 col-lg-9 col-xl-8">
+      <div class="col-md-10 col-lg-9 col-xl-8">
         <div class="post-heading">
             <span class="meta">
               <a href="{% url "posts:group_list" group_slug=post.group.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-outline-dark btn-sm">
@@ -162,8 +162,8 @@
   </div>
   {% endif %}
   <div class="container">
-    <div class="row">
-      <div class="col-12 mx-0">
+    <div class="row justify-content-center">
+      <div class="col-md-11 col-lg-9 col-xl-8">
         {{ post.text|linebreaksbr }}
         {% if is_edit %}
         <div class="d-flex justify-content-end">
