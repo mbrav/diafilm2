@@ -42,4 +42,4 @@ class GroupModelTest(TestModelFactory):
 
     def test_str_text(self):
         group = self.group
-        self.assertEqual(str(group), group.title)
+        self.assertEqual(str(group), group.name)

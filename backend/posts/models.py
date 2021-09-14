@@ -4,18 +4,31 @@ from django.db import models
 User = get_user_model()
 
 
-class Group(models.Model):
+class GroupCategory(models.Model):
 
-    title = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField(blank=True,)
+    name = models.CharField(
+        max_length=120,
+        unique=True,
+        verbose_name='Имя категории постов',
+    )
+
+    slug = models.SlugField(
+        max_length=120,
+        unique=True,
+        verbose_name='Slug категории постов',
+    )
+
+    description = models.TextField(
+        blank=True,
+        verbose_name='Описание категории постов',
+    )
 
     class Meta:
         verbose_name = 'Группа'
         verbose_name_plural = 'Группы'
 
     def __str__(self):
-        return f'{self.title}'
+        return f'{self.name}'
 
 
 class Post(models.Model):
@@ -45,20 +58,24 @@ class Post(models.Model):
         help_text='Укажите автора поста',
     )
 
-    group = models.ForeignKey(
-        Group,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='posts',
-        verbose_name='Группа поста',
-        help_text='Укажите группу поста',
+    groups = models.ManyToManyField(
+        GroupCategory,
+        related_name="posts",
+        verbose_name='Tэги, которые присвоены посту',
+        help_text='Укажите группу (группы) поста',
+    )
+
+    tags = models.ManyToManyField(
+        'Tag',
+        related_name="posts",
+        verbose_name='Группы, которые присвоены посту',
+        help_text='Укажите тэг (тэги) поста',
     )
 
     image = models.ImageField(
         'Картинка',
         upload_to='posts/',
-        blank=True
+        blank=True,
     )
 
     class Meta:
@@ -70,18 +87,49 @@ class Post(models.Model):
         return f'{self.text[:15]}'
 
 
-class Tag(models.Model):
+class TagCategory(models.Model):
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(
+        max_length=120,
+        unique=True,
+        verbose_name='Имя категории тэгов',
+    )
 
-    category = models.ForeignKey(
-        Group,
-        related_name='tags',
-        on_delete=models.CASCADE,
-        help_text='Тэг, которая имеет группа',
+    slug = models.SlugField(
+        max_length=120,
+        unique=True,
+        verbose_name='Slug категории тэгов',
     )
 
     class Meta:
+        verbose_name = 'Категория тэгов'
+        verbose_name_plural = 'Категории тэгов'
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Tag(models.Model):
+
+    name = models.CharField(
+        max_length=120,
+        verbose_name='Имя тэгa',
+    )
+
+    slug = models.SlugField(
+        max_length=120,
+        verbose_name='Slug тэгa',
+    )
+
+    category = models.ForeignKey(
+        TagCategory,
+        related_name='tags',
+        on_delete=models.CASCADE,
+        help_text='Группа тэгов, к которому присвоен тэг',
+    )
+
+    class Meta:
+        unique_together = ('name', 'category')
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
 

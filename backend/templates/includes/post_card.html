@@ -23,12 +23,12 @@
         </div>
       </div>
       <h6 class="card-subtitle mb-2 text-muted">{{ post.pub_date }}</h6>
+      {% for cat in post.groups.all %}
+        <a class="btn btn-outline-secondary btn-sm" href="{% url "posts:group_list" group_slug=cat.slug %}{% if post_view %}?post_view=True{% endif %}">«{{ cat }}»</a>
+      {% endfor %}
       <p class="card-text">{{ post.text|truncatewords:30 }}</p>
       <div class="btn-group">
-        <a class="btn btn-sm btn-outline-secondary" href="{% url "posts:post" post_id=post.id %}">подробная информация</a>
-        {% if post.group %}
-          <a class="btn btn-sm btn-outline-dark" href="{% url "posts:group_list" group_slug=post.group.slug %}{% if post_view %}?post_view=True{% endif %}">все записи группы</a>
-        {% endif %}
+        <a class="btn btn-sm btn-outline-dark" href="{% url "posts:post" post_id=post.id %}">Информация</a>
       </div>
     </div>
   </div>

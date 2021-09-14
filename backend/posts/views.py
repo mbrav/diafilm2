@@ -6,7 +6,7 @@ from django.views.decorators.cache import cache_page
 from django.db.models import Q
 
 from .forms import CommentForm, PostForm
-from .models import Comment, Follow, Group, Post, User
+from .models import Comment, Follow, GroupCategory, Post, User, Tag, TagCategory
 from diafilms.models import Film
 
 
@@ -18,11 +18,11 @@ def index(request):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('group', 'author').exclude(
+        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
             id__in=films).all().order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related(
-            'group', 'author', 'cover').all().order_by('-id')
+        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
+            'groups', 'cover__image').all().order_by('-id')
 
     paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
@@ -44,11 +44,11 @@ def profile(request, username):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('group', 'author').exclude(
+        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
             id__in=films).filter(author=author).order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related(
-            'group', 'author', 'cover').filter(author=author).order_by('-id')
+        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(author=author).order_by('-id')
 
     following = False
     if request.user.is_authenticated:
@@ -72,16 +72,16 @@ def group_list(request, group_slug):
     post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
-    group = get_object_or_404(Group, slug=group_slug)
+    group = get_object_or_404(GroupCategory, slug=group_slug)
 
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('group', 'author').exclude(
-            id__in=films).filter(group=group).order_by('-pub_date')
+        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
+            id__in=films).filter(groups=group).order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related(
-            'group', 'author', 'cover').filter(group=group).order_by('-id')
+        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(groups=group).order_by('-id')
 
     paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
@@ -95,14 +95,41 @@ def group_list(request, group_slug):
     return render(request, 'posts/group_list.html', context)
 
 
+def tag_list(request, tag_category_slug, tag_slug):
+    post_view = request.GET.get('post_view')
+    page_number = request.GET.get('page')
+
+    tag = get_object_or_404(Tag, slug=tag_slug, category__slug=tag_category_slug)
+
+    post_list = None
+    if post_view:
+        films = Film.objects.all().values_list('id')
+        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
+            id__in=films).filter(tags=tag).order_by('-pub_date')
+    else:
+        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(tags=tag).order_by('-id')
+
+    paginator = Paginator(post_list, 12)
+    page = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page,
+        'post_view': post_view,
+        'tag': tag,
+    }
+
+    return render(request, 'posts/tag_list.html', context)
+
+
 def diafilms(request):
     page_number = request.GET.get('page')
     query = request.GET.get('q')
 
     post_list = None
     if query:
-        # SQLite workaround 
-        # Ref: https://docs.djangoproject.com/en/dev/ref/databases/#substring-matching-and-case-sensitivity 
+        # SQLite workaround
+        # Ref: https://docs.djangoproject.com/en/dev/ref/databases/#substring-matching-and-case-sensitivity
         q_low = query.lower()
         q_cap = query.capitalize()
         post_list = Film.objects.filter(
@@ -131,12 +158,12 @@ def post(request, post_id):
 
     frames, post = None, None
     if Film.objects.filter(id=post_id).exists():
-        post = get_object_or_404(Film.objects.select_related('group', 'author', 'cover').prefetch_related(
-            'comments__post', 'comments__author', 'frames__film'), id=post_id)
+        post = get_object_or_404(Film.objects.select_related('author', 'cover').prefetch_related(
+            'comments__post', 'comments__author', 'frames__film', 'tags', 'tags__category'), id=post_id)
         frames = post.frames
     else:
         post = get_object_or_404(Post.objects.select_related(
-            'group', 'author').prefetch_related('comments__post', 'comments__author'), id=post_id)
+            'author').prefetch_related('comments__post', 'comments__author', 'tags', 'tags__category'), id=post_id)
 
     posts_by_user = Post.objects.filter(
         author=post.author).count()

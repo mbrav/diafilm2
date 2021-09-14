@@ -1,11 +1,11 @@
 {% extends '../base.html' %}
 {% block title %}
-{{ group.name }}
+{{ tag.name }}
 {% endblock %}
 {% block content %}
 {% load static %}
 {% load cache %}
-{% cache 6000 group_list_header page_obj.object_list.0.image diafilms%}
+{% cache 6000 tag_list_header tag.category tag.name %}
 {% if page_obj.object_list.0.image %}
 {% load thumbnail %}
 {% thumbnail page_obj.object_list.0.image "600x200" crop="center" as im %}
@@ -22,8 +22,9 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
-          <h1><span class="highlight-text-color">Группа </span>«{{ group.name }}»</h1>
-          <p>{{group.description}}</p>
+          <h2>Тэг «<span class="highlight-text-color">{{ tag.name }}</span>»</h2>
+          <h3>Категория <span class="highlight-text-color">{{ tag.category }}</span></h3>
+          {% comment %} <p>{{group.description}}</p> {% endcomment %}
           <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
         </div>
       </div>

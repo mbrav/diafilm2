@@ -3,16 +3,73 @@ from posts.models import Post
 
 
 class Film(Post):
-    name = models.CharField(max_length=120)
-    url = models.CharField(max_length=255, blank=True, null=True)
-    studio = models.CharField(max_length=120, blank=True, null=True)
-    year = models.PositiveIntegerField(blank=True, null=True)
-    color = models.CharField(max_length=120, blank=True, null=True)
-    type = models.CharField(max_length=120, blank=True, null=True)
-    index = models.CharField(max_length=120, blank=True, null=True)
-    number = models.CharField(max_length=120, blank=True, null=True)
-    film_name = models.CharField(max_length=120, blank=True, null=True)
-    quality = models.CharField(max_length=120, blank=True, null=True)
+
+    name = models.CharField(
+        max_length=120,
+        verbose_name='Имя Диафильма',
+    )
+
+    url = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name='Ссылка на оригинальный пост на Diafilmy.su',
+    )
+
+    studio = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Студия диафильма',
+    )
+
+    year = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Год создания диафильма',
+    )
+
+    color = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Цвет диафильма',
+    )
+
+    index = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Индекс диафильма',
+    )
+
+    number = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Номер диафильма',
+    )
+
+    film_name = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Плёнка диафильма',
+    )
+
+    film_type = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Тип плёнки диафильма',
+    )
+
+    quality = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+        verbose_name='Качество диафильма',
+    )
 
     def frames(self):
         return self.frames.all().count()
@@ -36,12 +93,13 @@ class Image(models.Model):
 
     external = models.BooleanField(
         default=True,
-        help_text="Укажите, если картинка внешняя",
+        help_text="Укажите, если картинка внешняя, либо она локальная",
     )
 
     image = models.ImageField(
         'Картинка',
         upload_to='images/',
+        help_text="Локальная картинка",
         blank=True
     )
 
@@ -49,6 +107,7 @@ class Image(models.Model):
         max_length=255,
         unique=False,
         blank=False,
+        help_text="Внешняя картинка",
     )
 
     class Meta:
@@ -72,6 +131,7 @@ class Frame(Image):
         blank=True,
         null=True,
         unique=False,
+        help_text='Последовательность кадра',
     )
 
     class Meta:

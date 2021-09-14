@@ -1,15 +1,15 @@
 from django.contrib import admin
 
-from .models import Comment, Follow, Group, Post, Tag
+from .models import Comment, Follow, GroupCategory, Post, Tag, TagCategory
 
 
-@admin.register(Group)
-class GroupAdmin(admin.ModelAdmin):
+@admin.register(GroupCategory)
+class GroupCategoryAdmin(admin.ModelAdmin):
     list_per_page = 50
 
     list_display = (
         'id',
-        'title',
+        'name',
         'slug',
         'description',
     )
@@ -19,11 +19,11 @@ class GroupAdmin(admin.ModelAdmin):
     )
 
     ordering = (
-        'title',
+        'name',
     )
 
     search_fields = (
-        'title',
+        'name',
     )
 
 
@@ -33,7 +33,6 @@ class PostAdmin(admin.ModelAdmin):
 
     list_display = (
         'id',
-        'group',
         'pub_date',
         'modified_at',
         'author',
@@ -90,6 +89,25 @@ class FollowAdmin(admin.ModelAdmin):
         'created',
     )
 
+@admin.register(TagCategory)
+class TagCategory(admin.ModelAdmin):
+    list_per_page = 100
+
+    list_display = (
+        'id',
+        'name',
+        'slug',
+    )
+
+    search_fields = (
+        'id',
+        'name',
+        'slug',
+    )
+
+    ordering = (
+        'name',
+    )
 
 @admin.register(Tag)
 class Tag(admin.ModelAdmin):
@@ -98,12 +116,14 @@ class Tag(admin.ModelAdmin):
     list_display = (
         'id',
         'name',
+        'slug',
         'category',
     )
 
     search_fields = (
         'id',
         'name',
+        'slug',
         'category',
     )
 
@@ -114,4 +134,5 @@ class Tag(admin.ModelAdmin):
     ordering = (
         'category',
         'name',
+        'slug',
     )

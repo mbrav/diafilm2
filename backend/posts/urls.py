@@ -26,4 +26,6 @@ urlpatterns = [
          views.add_comment, name='add_comment'),
     path('posts/<int:post_id>/comment/delete/<int:comment_id>/',
          views.delete_comment, name='delete_comment'),
+
+    path('tag/<slug:tag_category_slug>/<slug:tag_slug>/', views.tag_list, name='tag_list'),
 ]

@@ -1,6 +1,7 @@
 # Production
 Django==3.2.7
 django-debug-toolbar==3.2.2
+django-environ==0.6.0
 mixer==7.1.2
 Pillow==8.3.2
 pytest==6.2.5
@@ -9,7 +10,6 @@ pytest-pythonpath==0.7.3
 requests==2.26.0
 six==1.16.0
 sorl-thumbnail==12.7.0
-django-environ==0.6.0
 
 # For gmail support
 google-api-python-client

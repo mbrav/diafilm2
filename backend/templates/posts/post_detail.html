@@ -18,14 +18,18 @@
       <div class="col-md-10 col-lg-9 col-xl-8">
         <div class="post-heading">
             <span class="meta">
-              <a href="{% url "posts:group_list" group_slug=post.group.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-outline-dark btn-sm">
-                Группа: <i>«{{ post.group.title }}»</i>
-              </a>
-              {% if frames %}
+              <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
+              {% for cat in post.groups.all %}
+                <a href="{% url "posts:group_list" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-outline-dark btn-sm">
+                <i>«{{ cat }}»</i>
+                </a>
+              {% endfor %}
+              </h3>
+              {% comment %} {% if frames %}
               <a href='{% url "posts:diafilms_random" %}' class="btn btn-outline-dark btn-sm">
                 Случайный Диафилмьм
               </a>
-              {% endif %}
+              {% endif %} {% endcomment %}
             </span>
             {% if frames %}<h1>«{{ post.name }}»</h1>{% endif %}
             <h2 class="subheading mb-3">Автор: {{ post.author.username }}
@@ -118,41 +122,53 @@
   </div>
   <div class="container">
     <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-11 col-lg-9 col-xl-8">
+      <div class="col-md-11 col-lg-9">
         <div class="container">
           <div class="row">
             <div class="col">
               <p>
-                <b>Название:</b>
-                <i>«{{ post.name }}»</i>
+                {% for tag in post.tags.all %}
+                <b>{{ tag.category }}:</b>
+                {% comment %} <a href="{% url "posts:tag_list" tag_categeory_slug=tag.category.slug tag_slug=tag.slug %}"> {% endcomment %}
+                <a href="/tag/{{tag.category.slug}}/{{tag.slug}}/">
+                <i>«{{ tag.name }}»</i>
+                </a>
                 <br />
-                <b>Студия:</b>
-                <i>«{{ post.studio }}»</i>
-                <br />
-                <b>Год:</b>
-                <i>«{{ post.year }}»</i>
-                <br />
-                <b>Кадров:</b>
-                <i>{{ frames.count }}</i>
-                <br />
+                {% endfor %}
               </p>
             </div>
             <div class="col">
               <p>
-                <b>Цвет:</b>
-                <i>«{{ post.color }}»</i>
+                <b>Студия:</b>
+                <i>«{{ post.studio }}»</i>
+                <br />
+                <b>Название:</b>
+                <i>«{{ post.name }}»</i>
+                <br />
+                <b>Год:</b>
+                {{ post.year }}
+                <br />
+                <b>Кадров:</b>
+                <i>{{ frames.count }}</i>
                 <br />
                 <b>Индекс:</b>
-                <i>«{{ post.index }}»</i>
+                {{ post.index }}
                 <br />
                 <b>Номер:</b>
-                <i>«{{ post.number }}»</i>
+                {{ post.number }}
                 <br />
-                <b>Плёнка:</b>
-                <i>«{{ post.film }}»</i>
+                <b>Цвет:</b>
+                {{ post.color }}
                 <br />
                 <b>Качество:</b>
-                <i>«{{ post.quality }}»</i>
+                {{ post.quality }}
+                <br />
+                <b>Плёнка:</b>
+                {{ post.film }}
+                <br />
+                <b>Тип Плёнки:</b>
+                {{ post.film_type }}
+                <br />
               </p>
             </div>
           </div>

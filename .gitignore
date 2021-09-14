@@ -109,3 +109,4 @@ favicon_io.zip
 backend/parsing/
 backend/parsing/data/
 backend/about/email/credentials.json
+backend/fixtures/
