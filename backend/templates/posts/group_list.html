@@ -23,8 +23,8 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
           <h1>
-            <span class="highlight-text-color">Группа </span>
-            <i class="bi bi-tag"></i> {{ group.name }}
+            <span class="highlight-text-color"><i class="bi bi-tag"></i> Группа</span>
+            {{ group.name }}
           </h1>
           <p>{{group.description}}</p>
           <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
