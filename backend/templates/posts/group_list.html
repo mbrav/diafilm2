@@ -5,7 +5,7 @@
 {% block content %}
 {% load static %}
 {% load cache %}
-{% cache 6000 group_list_header page_obj.object_list.0.image diafilms%}
+{% cache 6000 group_list_header page_obj.object_list.0.image group.name %}
 {% if page_obj.object_list.0.image %}
 {% load thumbnail %}
 {% thumbnail page_obj.object_list.0.image "600x200" crop="center" as im %}
