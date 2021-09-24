@@ -27,7 +27,10 @@
             <span class="highlight-text-color">Δиа</span> Фильм²
           </h1>
           <span class="subheading">
-            <b> {{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
+            <b>{{ page_obj.paginator.count }}</b> советскиx диафильмов, теперь на Django!
+          </span>
+          <span class="subheading">
+            Всего кадров: <b>{{ frame_count }}</b>
           </span>
           <a class="btn btn-dark mt-4" href='{% url "posts:diafilms_random" %}'>
             Случайный Диафилмьм

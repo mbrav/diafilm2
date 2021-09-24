@@ -7,7 +7,8 @@
       <form method="post" action="{% url "posts:post_create" %}" enctype="multipart/form-data">
       {% endif %}
       {% csrf_token %}
-      <div class="form-group row my-3 p-3">
+      {{ form.as_p }}
+      {% comment %} <div class="form-group row my-3 p-3">
         <label for="id_text">
           Текст поста
           <span class="required text-danger">*</span>
@@ -18,10 +19,10 @@
         </small>
       </div>
       <div class="form-group row my-3 p-3">
-        <label for="id_group"> Группа </label>
-        {{ form.group }}
+        <label for="id_groups"> Группа </label>
+        {{ form.groups }}
         <small id="id_group-help" class="form-text text-muted">
-          {{ form.group.help_text }}
+          {{ form.groups.help_text }}
         </small>
       </div>
       <div class="form-group row my-3 p-3">
@@ -30,7 +31,7 @@
         <small id="id_image-help" class="form-text text-muted">
           {{ form.image.help_text }}
         </small>
-      </div>
+      </div> {% endcomment %}
       {% include "includes/form_errors.html" %}
       <div class="d-flex justify-content-end">
         <button type="submit" class="btn btn-primary">Сохранить</button>

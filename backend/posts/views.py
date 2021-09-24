@@ -7,7 +7,7 @@ from django.db.models import Q
 
 from .forms import CommentForm, PostForm
 from .models import Comment, Follow, GroupCategory, Post, User, Tag, TagCategory
-from diafilms.models import Film
+from diafilms.models import Film, Frame
 
 
 # @cache_page(60)
@@ -27,10 +27,13 @@ def index(request):
     paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
 
+    frame_count = Frame.objects.all().count
+
     context = {
         'page_obj': page,
         'post_view': post_view,
         'index': True,
+        'frame_count': frame_count,
     }
 
     return render(request, 'posts/index.html', context)

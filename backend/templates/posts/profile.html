@@ -23,9 +23,13 @@
            {% if author != user %}
             <span>
             {% if following %}
-              <a href="{% url "posts:unfollow_user" username=author.username %}" class="btn btn-danger btn-sm" role="button">Отписаться</a>
+              <a href="{% url "posts:unfollow_user" username=author.username %}" class="btn btn-danger btn-sm" role="button">
+                <i class="bi bi-star"></i> Отписаться
+              </a>
             {% else %}
-              <a href="{% url "posts:follow_user" username=author.username %}" class="btn btn-success btn-sm" role="button">Подписаться</a>
+              <a href="{% url "posts:follow_user" username=author.username %}" class="btn btn-success btn-sm" role="button">
+                <i class="bi bi-star-fill"></i> Подписаться
+              </a>
             {% endif %}
             </span>
           {% endif %}

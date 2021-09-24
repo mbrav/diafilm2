@@ -18,17 +18,26 @@
             <a href="{% url "posts:profile" username=post.author.username %}">Автор: {{ post.author }}</a>
           </h5>
           {% else %}
-          <h5 class="card-title"><i>{{ post.name }}</i></h5>
+          <h5 class="card-title">
+            <a href="{% url "posts:post" post_id=post.id %}"><i>{{ post.name }}</i></a>
+          </h5>
           {% endif %}
         </div>
       </div>
-      <h6 class="card-subtitle mb-2 text-muted">{{ post.pub_date }}</h6>
+      <h6 class="card-subtitle mb-2 text-muted">
+        <i class="bi bi-calendar-event"></i> {{ post.pub_date }} 
+      </h6>
       {% for cat in post.groups.all %}
-        <a class="btn btn-outline-secondary btn-sm" href="{% url "posts:group_list" group_slug=cat.slug %}{% if post_view %}?post_view=True{% endif %}">«{{ cat }}»</a>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url "posts:group_list" group_slug=cat.slug %}{% if post_view %}?post_view=True{% endif %}">
+          <i class="bi bi-tag"></i>
+          {{ cat }}
+        </a>
       {% endfor %}
       <p class="card-text">{{ post.text|truncatewords:30 }}</p>
       <div class="btn-group">
-        <a class="btn btn-sm btn-outline-dark" href="{% url "posts:post" post_id=post.id %}">Информация</a>
+        <a class="btn btn-sm btn-outline-primary" href="{% url "posts:post" post_id=post.id %}">
+          <i class="bi bi-eye"></i> Просмотр
+        </a>
       </div>
     </div>
   </div>

@@ -1,15 +1,19 @@
 from django import forms
 
-from .models import Comment, Post
+from .models import Comment, Post, GroupCategory
 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('text', 'groups', 'image',)
+        fields = (
+            'text',
+            'groups',
+            'image',
+        )
         labels = {
             'text': 'Текст нового поста',
-            'groups': 'Группы, к которой будет относиться пост',
+            'groups': 'Выберете группу, к которой будет относиться пост',
             'image': 'Картинка поста',
         }
 

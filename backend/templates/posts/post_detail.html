@@ -20,8 +20,9 @@
             <span class="meta">
               <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
               {% for cat in post.groups.all %}
-                <a href="{% url "posts:group_list" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-outline-dark btn-sm">
-                <i>«{{ cat }}»</i>
+                <a href="{% url "posts:group_list" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
+                <i class="bi bi-tag"></i> {{ group.name }}
+                <i>{{ cat }}</i>
                 </a>
               {% endfor %}
               </h3>
@@ -32,7 +33,7 @@
               {% endif %} {% endcomment %}
             </span>
             {% if frames %}<h1>«{{ post.name }}»</h1>{% endif %}
-            <h2 class="subheading mb-3">Автор: {{ post.author.username }}
+            <h2 class="subheading mb-3"><i class="bi bi-person-fill"></i>{{ post.author.username }}
               {% if post.author != user %}
                 {% if following %}
                   <a href="{% url "posts:unfollow_user" username=post.author.username %}" class="btn btn-warning btn-sm" role="button">
@@ -51,7 +52,7 @@
                 </span>
               </a>
             </h2>
-            <h5>Дата публикации: {{ post.pub_date  }}</h5>
+            <h5><i class="bi bi-calendar-event"></i> {{ post.pub_date  }}</h5>
         </div>
       </div>
     </div>
@@ -185,10 +186,10 @@
         <div class="d-flex justify-content-end">
           <!-- эта кнопка видна только автору -->
           <a class="btn btn-sm btn-info mx-1" href="{% url "posts:post_edit" post_id=post.id %}">
-            Редактировать
+            <i class="bi bi-pencil"></i> Редактировать
           </a>
           <a class="btn btn-sm btn-danger mx-1" href="{% url "posts:post_delete" post_id=post.id %}">
-            Удалить
+            <i class="bi bi-trash"></i> Удалить
           </a>
         </div>
         {% endif %}
