@@ -98,11 +98,36 @@ def group_list(request, group_slug):
     return render(request, 'posts/group_list.html', context)
 
 
+def tag_category_list(request):
+    page_number = request.GET.get('page')
+    tag_category = request.GET.get('category')
+    tag_categories = TagCategory.objects.all()
+
+    tags = None
+    if tag_category:
+        tag_category = get_object_or_404(TagCategory, slug=tag_category)
+        tags = Tag.objects.select_related('category').filter(category__slug=tag_category.slug).order_by('name')
+    else:
+        tags = Tag.objects.select_related('category').all().order_by('name')
+
+    paginator = Paginator(tags, 100)
+    page = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page,
+        'category': tag_category,
+        'tag_categories': tag_categories,
+    }
+
+    return render(request, 'posts/tag_category_list.html', context)
+
+
 def tag_list(request, tag_category_slug, tag_slug):
     post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
-    tag = get_object_or_404(Tag, slug=tag_slug, category__slug=tag_category_slug)
+    tag = get_object_or_404(
+        Tag, slug=tag_slug, category__slug=tag_category_slug)
 
     post_list = None
     if post_view:

@@ -6,16 +6,21 @@
       <div class="card p-3 my-2">
         <div class="d-flex justify-content-between align-items-center">
           <div class="user d-flex flex-row align-items-center">
-            <img src="{% static 'img/logo.png' %}" width="30" class="user-img rounded-circle mr-2">
+            <!-- <img src="{% static 'img/logo.png' %}" width="30" class="user-img rounded-circle mr-2"> -->
             <span>
               <small class="font-weight-bold text-primary mx-2">
-                <a href="{% url "posts:profile" username=comment.author.username %}">{{ comment.author.username }}</a>
+                <span class="highlight-text-color">
+                  <i class="bi bi-person-fill"></i> 
+                </span>
+                <b>
+                  <a href="{% url "posts:profile" username=comment.author.username %}">{{ comment.author.username }}</a>
+                </b>
               </small>
-              <small class="font-weight-bold">{{ comment.text }}</small>
             </span>
+            <small>{{ comment.created }}</small>
           </div> 
-          <small>{{ comment.created }}</small>
         </div>
+        <p class="mx-2">{{ comment.text }}</p>
         {% if comment.author == request.user %}
         <div class="action d-flex justify-content-end">
           <small>

@@ -14,7 +14,10 @@
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
           <h1>
-            <span class="highlight-text-color">Δиа</span> Фильм²
+            <i class="bi bi-search highlight-text-color"></i>
+            <span class="highlight-text-color">
+               Пойск
+            </span>
           </h1>
           {% if query %}
           <span class="subheading">
@@ -41,14 +44,19 @@
       <div class="col-md-12 col-xl-10">
         <div class="container">
           <div class="row">
-            <div class="col-md-12 col-lg-8 col-xl-6">
-              <form class="input-group input-group-lg mb-3" action="">
+            <div class="col-md-12 col-lg-6 col-xl-5">
+              <form class="input-group input-group mb-3" action="">
                 <input type="text" name="q" class="form-control" placeholder="Искать диафильм по названию">
                 <input type="submit" value="Искать">
               </form>
             </div>
-            <div class="col-md-12 col-lg-4 col-xl-6">
+            <div class="col-md-12 col-lg-3 col-xl-4">
             {% include 'includes/paginator.html' %}
+            </div>
+            <div class="col-md-12 col-lg-3 col-xl-3">
+            <a href="{% url "posts:tag_category_list" %}" class="btn btn-secondary btn-sm" role="button">
+              <i class="bi bi-tag"></i> Поиск тэгов
+            </a>
             </div>
           </div>
         </div>

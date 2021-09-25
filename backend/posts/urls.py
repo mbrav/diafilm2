@@ -28,4 +28,5 @@ urlpatterns = [
          views.delete_comment, name='delete_comment'),
 
     path('tag/<slug:tag_category_slug>/<slug:tag_slug>/', views.tag_list, name='tag_list'),
+    path('tag-list/', views.tag_category_list, name='tag_category_list'),
 ]

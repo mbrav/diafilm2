@@ -5,7 +5,7 @@
 {% block content %}
 {% load static %}
 {% load cache %}
-{% cache 6000 group_list_header page_obj.object_list.0.image group.name %}
+{% cache 6000 group_list_header group.name post_view %}
 {% if page_obj.object_list.0.image %}
 {% load thumbnail %}
 {% thumbnail page_obj.object_list.0.image "600x200" crop="center" as im %}
@@ -22,10 +22,8 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
-          <h1>
-            <span class="highlight-text-color"><i class="bi bi-tag"></i> Группа</span>
-            {{ group.name }}
-          </h1>
+          <h2>Группа </h2>
+          <h2><span class="highlight-text-color">«{{ group.name }}»</span></h2>
           <p>{{group.description}}</p>
           <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
         </div>
@@ -43,7 +41,7 @@
   {% else %}
     {% include 'includes/paginator.html' %}
   {% endif %}
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
     {% for post in page_obj %}
       {% include 'includes/post_card.html' %}
     {% endfor %}
