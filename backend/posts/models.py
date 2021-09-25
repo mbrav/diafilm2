@@ -61,14 +61,14 @@ class Post(models.Model):
     groups = models.ManyToManyField(
         GroupCategory,
         related_name="posts",
-        verbose_name='Tэги, которые присвоены посту',
+        verbose_name='Группы, которые присвоены посту',
         help_text='Укажите группу (группы) поста',
     )
 
     tags = models.ManyToManyField(
         'Tag',
         related_name="posts",
-        verbose_name='Группы, которые присвоены посту',
+        verbose_name='Тэги, которые присвоены посту',
         help_text='Укажите тэг (тэги) поста',
     )
 

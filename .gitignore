@@ -111,3 +111,4 @@ backend/parsing/data/
 backend/about/email/credentials.json
 backend/fixtures/
 backend/reload-db.sh
+backend/parsing/*
