@@ -106,7 +106,8 @@ def tag_category_list(request):
     tags = None
     if tag_category:
         tag_category = get_object_or_404(TagCategory, slug=tag_category)
-        tags = Tag.objects.select_related('category').filter(category__slug=tag_category.slug).order_by('name')
+        tags = Tag.objects.select_related('category').filter(
+            category__slug=tag_category.slug).order_by('name')
     else:
         tags = Tag.objects.select_related('category').all().order_by('name')
 

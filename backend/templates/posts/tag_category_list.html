@@ -1,6 +1,6 @@
 {% extends '../base.html' %}
 {% block title %}
-{{ tag.name }}
+Δиа Фильм² | {% if category %}Тэги с категорией {{ category.name }}{% else %}Тэги всех категорией{% endif %}
 {% endblock %}
 {% block content %}
 {% load static %}

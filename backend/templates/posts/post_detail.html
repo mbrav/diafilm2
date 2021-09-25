@@ -1,6 +1,6 @@
 {% extends '../base.html' %}
 {% block title %}
-{{ post.id }}
+{{ post.name }}
 {% endblock %}
 {% block content %}
 {% load cache %}
@@ -139,7 +139,7 @@
                   <b> {{ tag.category }}:</b>
                   {% comment %} <a href="{% url "posts:tag_list" tag_categeory_slug=tag.category.slug tag_slug=tag.slug %}"> {% endcomment %}
                   <a href="/tag/{{tag.category.slug}}/{{tag.slug}}/">
-                  <i>«{{ tag.name }}»</i>
+                  <i>{{ tag.name }}</i>
                   </a>
                   <br />
                 {% endfor %}
