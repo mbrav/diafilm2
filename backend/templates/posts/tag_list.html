@@ -1,37 +1,33 @@
 {% extends '../base.html' %}
 {% block title %}
-Δиа Фильм² | Тэг {{ tag.name }}
+Δиа Фильм² | {% if category %}Тэги с категорией {{ category.name }}{% else %}Тэги всех категорией{% endif %}
 {% endblock %}
 {% block content %}
 {% load static %}
 {% load cache %}
-{% cache 6000 tag_list_header tag.category tag.name %}
-{% if page_obj.object_list.0.image %}
-{% load thumbnail %}
-{% thumbnail page_obj.object_list.0.image "600x200" crop="center" as im %}
-<header
-  class="masthead py-6"
-  style="background-image: url('{{ im.url }}">
-{% endthumbnail %}
-{% else %}
+{% cache 6000 tag_list_header category %}
 <header
   class="masthead py-6"
   style="background-image: url('{% static 'img/bg/bg-4.jpg' %}')">
-{% endif %}
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
+          {% if category %}
           <h2>
             <span class="highlight-text-color">
               <i class="bi bi-tag-fill"></i>
-            </span> «{{ tag.name }}»
-          </h2>
-          <h2>
-            <span class="highlight-text-color">Категория </span><br>
-            «{{ tag.category }}»
-          </h2>
-          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
+            </span> Тэги с категорией </h2>
+          <h1>«<span class="highlight-text-color">
+            {{ category.name }}
+          </span>»</h1>
+          {% else %}
+          <h1>
+            <span class="highlight-text-color">
+              <i class="bi bi-tag-fill"></i>
+            </span> Тэги всех категорией</h1>
+          {% endif %}
+          <span class="subheading"><b>Всего тэгов: {{ page_obj.paginator.count }}</b></span>
         </div>
       </div>
     </div>
@@ -39,20 +35,34 @@
 </header>
 {% endcache %}
 <!-- Основной Контент-->
-<main class="mb-4">
-  <div class="container px-4 px-lg-5">
-  {% include 'includes/switcher.html' %}
-  {% include 'includes/content-bar.html' %}
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-    {% for post in page_obj %}
-      {% include 'includes/post_card.html' %}
-    {% endfor %}
-  </div>
-  {% if post_view %}
-    {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
-  {% else %}
-    {% include 'includes/paginator.html' %}
-  {% endif %}
+<main class="mb-4"> 
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12 col-lg-11 col-xl-9">
+        <div class="mb-4"> 
+          <a class="btn btn-sm btn{% if category.slug %}-outline-{% else %}-{% endif %}primary" href=".">Все</a>
+          {% for cat in tag_categories %}
+          <span>
+          <a class="btn btn-sm btn{% if category.slug == cat.slug %}-{% else %}-outline-{% endif %}secondary" href="?category={{ cat.slug }}">{{ cat.name }}</a>
+          </span>
+          {% endfor %}
+        </div>
+        {% include 'includes/content-bar.html' %}
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-4 g-2 my-4">
+          {% for tag in page_obj %}
+            <div class="col">
+              <a href="/tag/{{tag.category.slug}}/{{tag.slug}}/">
+                <span class="highlight-text-color">
+                  <i class="bi bi-tag"></i>
+                </span> {{ tag.name }}
+              </a>
+            </div>
+          {% endfor %}
+          </ul>
+        </div>
+        {% include 'includes/paginator.html' %}
+      </div>
+    </div>
   </div>
 </main>
 {% endblock %}

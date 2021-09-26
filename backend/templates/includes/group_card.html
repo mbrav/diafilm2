@@ -1,0 +1,26 @@
+{% load cache %}
+{% cache 6000 post_card_thumbnail group %}
+<div class="col">
+  <div class="card shadow-sm">
+  {% if group.image %}
+    {% load thumbnail %}
+    {% thumbnail post.image "300x150" crop="center" as im %}
+    <img src="{{ im.url }}" class="card-img-top">
+    {% endthumbnail %}
+  {% else %}
+    <img src="{{ group.posts.last.cover.image.url }}" class="card-img-top">
+  {% endif %}
+    <!-- <h4>{{ group.posts.all.0.cover.image.url}}</h4> -->
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="user d-flex flex-row align-items-center">
+          <h5 class="card-title">
+            <a href="{% url "posts:group_detail" group_slug=group.slug %}"><i>{{ group.name }}</i></a>
+          </h5>
+          <p>{{ group.posts.all.count }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endcache %}

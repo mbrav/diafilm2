@@ -8,7 +8,7 @@ from .test_factory import TestModelFactory
 class PostsFormTests(TestModelFactory):
     """Тест форм постов"""
 
-    def test_create_post(self):
+    def test_post_create(self):
         """Валидная форма создает запись в Post."""
         post_count = Post.objects.count()
         new_text = 'Тестовый текст' + str(post_count + 1)
@@ -36,7 +36,7 @@ class PostsFormTests(TestModelFactory):
         post = Post.objects.get(text=new_text)
         self.assertEqual(post.image.size, test_image.size)
 
-    def test_create_post_cache(self):
+    def test_post_create_cache(self):
         """Валидная форма создает запись в Post с кэшом."""
 
         post_count = Post.objects.count()

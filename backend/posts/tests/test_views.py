@@ -73,11 +73,11 @@ class GroupsViewsTests(TestModelFactory):
         self.assertEqual(first_object.text, self.post.text)
         self.assertEqual(first_object.author, self.auth_user)
 
-    def test_group_list_page_show_correct_context(self):
-        """Шаблон group_list сформирован с правильным контекстом."""
+    def test_group_detail_page_show_correct_context(self):
+        """Шаблон group_detail сформирован с правильным контекстом."""
         cache.clear()
         response = self.authorized_client.get(
-            reverse('posts:group_list', kwargs={'group_slug': self.group.slug})
+            reverse('posts:group_detail', kwargs={'group_slug': self.group.slug})
         )
         first_object = response.context['page_obj'].object_list[0]
         self.assertEqual(first_object.id, self.post.id)
@@ -113,12 +113,12 @@ class PaginatorViewsTest(TestModelFactory):
         response = self.guest_client.get(reverse('posts:index'))
         self.assertEqual(len(response.context['page_obj']), 10)
 
-    def test_group_list_contains_remainder_records(self):
-        """Проверка: на последней странице group_list должно быть
+    def test_group_detail_contains_remainder_records(self):
+        """Проверка: на последней странице group_detail должно быть
         % десяти от всего количества постов."""
         remainder = self.number_of_posts % 10
         response = self.client.get(
-            reverse('posts:group_list', kwargs={
+            reverse('posts:group_detail', kwargs={
                     'group_slug': self.group.slug}) + f'?page={remainder}'
         )
         last_page_posts_num = response.context['page_obj'].paginator.count % 10

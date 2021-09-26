@@ -4,12 +4,14 @@ from . import views
 
 urlpatterns = [
     # Основное
-    path('', views.index, name='index'),
-    path('create/', views.post_create, name='post_create'),
-    path('follow/', views.follow_index, name='follow_list'),
-    path('diafilms/', views.diafilms, name='diafilms_list'),
+    path('', views.post_list, name='index'),
     path('diafilms/random/', views.diafilms_random, name='diafilms_random'),
-    path('group/<slug:group_slug>/', views.group_list, name='group_list'),
+#     path('groups/', views.group_list, name='group_list'),
+    path('group/<slug:group_slug>/', views.group_detail, name='group_detail'),
+    path('tags/', views.tag_list, name='tag_list'),
+    path('tag/<slug:tag_category_slug>/<slug:tag_slug>/', views.tag_detail, name='tag_detail'),
+    path('search/', views.post_search, name='post_search'),
+    path('follow/', views.follow_index, name='post_follow_list'),
 
     # Профиль
     path('profile/<str:username>/', views.profile, name='profile'),
@@ -19,6 +21,7 @@ urlpatterns = [
          views.profile_unfollow, name='unfollow_user'),
 
     # Посты
+    path('create/', views.post_create, name='post_create'),
     path('posts/<int:post_id>/', views.post, name='post'),
     path('posts/<int:post_id>/edit/', views.post_edit, name='post_edit'),
     path('posts/<int:post_id>/delete/', views.post_delete, name='post_delete'),
@@ -27,6 +30,4 @@ urlpatterns = [
     path('posts/<int:post_id>/comment/delete/<int:comment_id>/',
          views.delete_comment, name='delete_comment'),
 
-    path('tag/<slug:tag_category_slug>/<slug:tag_slug>/', views.tag_list, name='tag_list'),
-    path('tag-list/', views.tag_category_list, name='tag_category_list'),
 ]

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 
 from .forms import CommentForm, PostForm
 from .models import Comment, Follow, GroupCategory, Post, User, Tag, TagCategory
@@ -11,7 +11,7 @@ from diafilms.models import Film, Frame
 
 
 # @cache_page(60)
-def index(request):
+def post_list(request):
     post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
@@ -36,7 +36,7 @@ def index(request):
         'frame_count': frame_count,
     }
 
-    return render(request, 'posts/index.html', context)
+    return render(request, 'posts/post_list.html', context)
 
 
 def profile(request, username):
@@ -71,7 +71,7 @@ def profile(request, username):
     return render(request, 'posts/profile.html', context)
 
 
-def group_list(request, group_slug):
+def group_detail(request, group_slug):
     post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
@@ -95,10 +95,28 @@ def group_list(request, group_slug):
         'group': group,
     }
 
+    return render(request, 'posts/group_detail.html', context)
+
+
+def group_list(request):
+    post_view = request.GET.get('post_view')
+    page_number = request.GET.get('page')
+
+    # groups = GroupCategory.objects.prefetch_related('posts')
+    groups = GroupCategory.objects.all().prefetch_related(Prefetch('posts', queryset=Post.objects.latest('-pub_date'), to_attr='last_post'))
+    # groups = GroupCategory.objects.prefetch_related(Prefetch('posts', queryset=Post.objects.order_by('-pub_date')[0], to_attr='last_post'))
+
+    paginator = Paginator(groups, 6)
+    page = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page,
+    }
+
     return render(request, 'posts/group_list.html', context)
 
 
-def tag_category_list(request):
+def tag_list(request):
     page_number = request.GET.get('page')
     tag_category = request.GET.get('category')
     tag_categories = TagCategory.objects.all()
@@ -120,10 +138,10 @@ def tag_category_list(request):
         'tag_categories': tag_categories,
     }
 
-    return render(request, 'posts/tag_category_list.html', context)
+    return render(request, 'posts/tag_list.html', context)
 
 
-def tag_list(request, tag_category_slug, tag_slug):
+def tag_detail(request, tag_category_slug, tag_slug):
     post_view = request.GET.get('post_view')
     page_number = request.GET.get('page')
 
@@ -148,10 +166,10 @@ def tag_list(request, tag_category_slug, tag_slug):
         'tag': tag,
     }
 
-    return render(request, 'posts/tag_list.html', context)
+    return render(request, 'posts/tag_detail.html', context)
 
 
-def diafilms(request):
+def post_search(request):
     page_number = request.GET.get('page')
     query = request.GET.get('q')
 
@@ -174,7 +192,7 @@ def diafilms(request):
         'query': query,
     }
 
-    return render(request, 'posts/diafilm_list.html', context)
+    return render(request, 'posts/post_search.html', context)
 
 
 def diafilms_random(request):
@@ -184,7 +202,6 @@ def diafilms_random(request):
 
 
 def post(request, post_id):
-
     frames, post = None, None
     if Film.objects.filter(id=post_id).exists():
         post = get_object_or_404(Film.objects.select_related('author', 'cover').prefetch_related(
@@ -233,7 +250,7 @@ def post_create(request):
         'form': form,
     }
 
-    return render(request, 'posts/create_post.html', context)
+    return render(request, 'posts/post_create.html', context)
 
 
 @login_required(login_url='/auth/login/')
@@ -259,7 +276,7 @@ def post_edit(request, post_id):
         'post': post
     }
 
-    return render(request, 'posts/update_post.html', context)
+    return render(request, 'posts/post_edit.html', context)
 
 
 @login_required(login_url='/auth/login/')
@@ -320,7 +337,7 @@ def follow_index(request):
         'following': usernames,
     }
 
-    return render(request, 'posts/follow_list.html', context)
+    return render(request, 'posts/post_follow_list.html', context)
 
 
 @login_required(login_url='/auth/login/')
@@ -332,7 +349,7 @@ def profile_follow(request, username):
             user=request.user,
             author=author)
 
-    return redirect('posts:follow_list')
+    return redirect('posts:post_follow_list')
 
 
 @login_required(login_url='/auth/login/')
@@ -346,4 +363,4 @@ def profile_unfollow(request, username):
     if follow.exists():
         follow.delete()
 
-    return redirect('posts:follow_list')
+    return redirect('posts:post_follow_list')

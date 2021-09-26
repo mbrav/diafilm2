@@ -20,7 +20,7 @@
             <span class="meta">
               <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
               {% for cat in post.groups.all %}
-                <a href="{% url "posts:group_list" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
+                <a href="{% url "posts:group_detail" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
                 <i class="bi bi-folder"></i> {{ group.name }}
                 <i>{{ cat }}</i>
                 </a>
@@ -137,7 +137,7 @@
                     <i class="bi bi-tag"></i>
                   </span>
                   <b> {{ tag.category }}:</b>
-                  {% comment %} <a href="{% url "posts:tag_list" tag_categeory_slug=tag.category.slug tag_slug=tag.slug %}"> {% endcomment %}
+                  {% comment %} <a href="{% url "posts:tag_detail" tag_categeory_slug=tag.category.slug tag_slug=tag.slug %}"> {% endcomment %}
                   <a href="/tag/{{tag.category.slug}}/{{tag.slug}}/">
                   <i>{{ tag.name }}</i>
                   </a>
