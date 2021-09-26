@@ -21,7 +21,7 @@
               <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
               {% for cat in post.groups.all %}
                 <a href="{% url "posts:group_list" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
-                <i class="bi bi-tag"></i> {{ group.name }}
+                <i class="bi bi-folder"></i> {{ group.name }}
                 <i>{{ cat }}</i>
                 </a>
               {% endfor %}
@@ -41,16 +41,16 @@
               {% if post.author != user %}
                 {% if following %}
                   <a href="{% url "posts:unfollow_user" username=post.author.username %}" class="btn btn-warning btn-sm" role="button">
-                    Отписаться
+                    <i class="bi bi-star"></i> Отписаться
                   </a>
                 {% else %}
                   <a href="{% url "posts:follow_user" username=post.author.username %}" class="btn btn-success btn-sm" role="button">
-                    Подписаться
+                    <i class="bi bi-star-fill"></i> Подписаться
                   </a>
                 {% endif %}
               {% endif %}
               <a href="{% url "posts:profile" username=post.author.username %}" class="btn btn-secondary btn-sm">
-                Посты автора
+                <i class="bi bi-film"></i> Посты автора
                 <span class="badge">
                   {{ posts_by_user }}
                 </span>

@@ -5,7 +5,7 @@
         class="nav-link {% if index %}active{% endif %}"
         href="{% url 'posts:index' %}"
       >
-        Все Записи
+        <i class="bi bi-files"></i> Все Записи
       </a>
     </li>
     {% if user.is_authenticated %}
@@ -14,14 +14,18 @@
         class="nav-link {% if following %}active{% endif %}"
         href="{% url 'posts:follow_list' %}"
       >
-        Подписки
+        <i class="bi bi-broadcast"></i> Подписки
       </a>
     </li>
     {% endif %}
     <li class="nav-item">
       <div class="btn-group btn-group" role="group" aria-label="Basic checkbox toggle button group">
-        <a class="btn btn{% if post_view %}-outline-{% else %}-{% endif %}primary" href=".">Диафильмы</a>
-        <a class="btn btn{% if post_view %}-{% else %}-outline-{% endif %}primary" href="?post_view=True">Посты</a>
+        <a class="btn btn{% if post_view %}-outline-{% else %}-{% endif %}primary" href=".">
+          <i class="bi bi-film"></i> Диафильмы
+        </a>
+        <a class="btn btn{% if post_view %}-{% else %}-outline-{% endif %}primary" href="?post_view=True">
+          <i class="bi bi-file-post"></i> Посты
+        </a>
       </div>
     </li>
   </ul>

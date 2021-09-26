@@ -29,7 +29,7 @@
       </h6>
       {% for cat in post.groups.all %}
         <a class="btn btn-outline-secondary btn-sm" href="{% url "posts:group_list" group_slug=cat.slug %}{% if post_view %}?post_view=True{% endif %}">
-          <i class="bi bi-tag"></i>
+          <i class="bi bi-folder"></i>
           {{ cat }}
         </a>
       {% endfor %}
