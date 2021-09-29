@@ -12,44 +12,60 @@ function cleanSlideStyles() {
 		slides[index].style.width = "100%";
 		slides[index].style.height = null;
 	}
-	return slides
+	return slides;
 }
 
-w = window.innerWidth;
-h = window.innerHeight;
-window.addEventListener(
-	"resize",
-	function (event) {
+function updateImgSizes() {
+	slides = cleanSlideStyles();
+	if (document.fullscreenElement !== null) {
 		w = window.innerWidth;
 		h = window.innerHeight;
+		currentSlide = document.querySelector(".carousel .active img");
+		sw = currentSlide.width;
+		sh = currentSlide.height;
 
-		if (document.fullscreenElement !== null) {
-			slides = cleanSlideStyles()
+		console.log("w:" + w, " h:" + h, " sw:" + sw, " sh:" + sh);
 
-			for (let index = 0; index < slides.length; index++) {
-				if (w > h) {
-					slides[index].style.height = h + "px";
-					slides[index].style.width = null;
-				} else {
-					slides[index].style.height = null;
-					slides[index].style.width = w + "px";
-				}
+		for (let index = 0; index < slides.length; index++) {
+			if (sh < h) {
+				slides[index].style.width = w + "px";
+				slides[index].style.height = null;
+			} else {
+				slides[index].style.height = h + "px";
+				slides[index].style.width = null;
 			}
 		}
-	},
-	true
-);
-
-function diafilmFullScreenToggle() {
-	diafilmCarousel.requestFullscreen();
+	}
 }
 
-document.onfullscreenchange = function (event) {
-	cleanSlideStyles();
-};
+function diafilmFullScreenToggle() {
+	if (diafilmCarousel.requestFullscreen) {
+		diafilmCarousel.requestFullscreen();
+	}
+	if (diafilmCarousel.webkitRequestFullscreen) {
+		diafilmCarousel.webkitRequestFullscreen();
+	}
+	if (diafilmCarousel.mozRequestFullScreen) {
+		diafilmCarousel.mozRequestFullScreen();
+	}
+	if (diafilmCarousel.msRequestFullscreen) {
+		diafilmCarousel.msRequestFullscreen();
+	}
+}
 
 document.getElementById("full-screen-toggle").onclick = diafilmFullScreenToggle;
 
+document.onfullscreenchange = function (event) {
+	updateImgSizes();
+};
+
+window.addEventListener(
+	"resize",
+	function (event) {
+		updateImgSizes();
+	},
+	true
+);
 
 window.addEventListener("DOMContentLoaded", () => {
 	let scrollPos = 0;
