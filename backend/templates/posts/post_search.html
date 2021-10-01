@@ -56,7 +56,7 @@
             <tr>
               <th scope="col">#</th>
               <th scope="col">Название</th>
-              <th scope="col">Студия</th>
+              <th scope="col">Группа</th>
               <th scope="col">Год</th>
             </tr>
           </thead>
@@ -68,10 +68,21 @@
                 <a href="{% url "posts:post" post_id=post.id %}"><i>«{{ post.name }}»</i></a>
               </td>
               <td>
-                <a href="{% url "posts:post" post_id=post.id %}">{{ post.studio }}</a>
+              {% for group in post.groups.all %}
+                <a href="{% url "posts:group_detail" group_slug=group.slug %}">
+                  <i class="bi bi-folder"></i>
+                  {{ group.name }}
+                </a><br>
+              {% endfor %}
               </td>
               <td>
-                <a href="{% url "posts:post" post_id=post.id %}">{{ post.year }}</a>
+                <a href="{% url "posts:post" post_id=post.id %}">
+                  {% if post.year != 0 %}
+                    {{ post.year }}
+                  {% else %}
+                    -
+                  {% endif %} 
+                </a>
               </td>
             </tr>
             {% endfor %}

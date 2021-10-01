@@ -179,10 +179,10 @@ def post_search(request):
         # Ref: https://docs.djangoproject.com/en/dev/ref/databases/#substring-matching-and-case-sensitivity
         q_low = query.lower()
         q_cap = query.capitalize()
-        post_list = Film.objects.filter(
+        post_list = Film.objects.prefetch_related('groups').filter(
             Q(name__icontains=q_low) | Q(name__icontains=q_cap)).order_by('id')
     else:
-        post_list = Film.objects.all().order_by('id')
+        post_list = Film.objects.prefetch_related('groups').all().order_by('id')
 
     paginator = Paginator(post_list, 100)
     page = paginator.get_page(page_number)

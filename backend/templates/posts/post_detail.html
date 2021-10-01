@@ -19,10 +19,10 @@
         <div class="post-heading">
             <span class="meta">
               <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
-              {% for cat in post.groups.all %}
-                <a href="{% url "posts:group_detail" group_slug=cat.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
+              {% for group in post.groups.all %}
+                <a href="{% url "posts:group_detail" group_slug=group.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
                 <i class="bi bi-folder"></i> {{ group.name }}
-                <i>{{ cat }}</i>
+                <i>{{ group }}</i>
                 </a>
               {% endfor %}
               </h3>
@@ -49,8 +49,8 @@
                   </a>
                 {% endif %}
               {% endif %}
-              <a href="{% url "posts:profile" username=post.author.username %}" class="btn btn-secondary btn-sm">
-                <i class="bi bi-film"></i> Посты автора
+              <a href="{% url "posts:profile" username=post.author.username %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-secondary btn-sm">
+                <i class="bi bi-film"></i> {% if frames %}Диафильмы{% else %}Посты{% endif %} автора
                 <span class="badge">
                   {{ posts_by_user }}
                 </span>
@@ -65,130 +65,7 @@
 {% endcache %}
 <main class="mb-4">
   {% if frames %}
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-10">
-        <a id="full-screen-toggle" class="btn btn-warning btn" role="button">
-          <h4><i class="bi bi-arrows-fullscreen"> </i>На весь экран</h4>
-        </a>
-        <div
-          class="carousel slide"
-          id="diafilm-carousel"
-          data-bs-ride="carousel"
-        >
-          <div class="carousel-inner">
-            {% for frame in frames.all %} 
-            {% if forloop.first %}
-            <div class="carousel-item active">
-              <img
-                class="d-block"
-                style="width:100%"
-                src="{{ frame.url }}"
-                alt="Кадр №{{ frame.sequence }}"
-              />
-            </div>
-            {% else %}
-            <div class="carousel-item">
-              <img
-                class="d-block"
-                style="width:100%"
-                src="{{ frame.url }}"
-                alt="Кадр №{{ frame.sequence }}"
-              />
-            </div>
-            {% endif %} 
-            {% endfor %}
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#diafilm-carousel"
-            data-bs-slide="prev"
-          >
-            <span
-              class="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#diafilm-carousel"
-            data-bs-slide="next"
-          >
-            <span
-              class="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-        <span class="caption text-muted">
-          Используйте кнопку ◀ и ▶ для навигации по слайдам.
-        </span>
-      </div>
-  </div>
-  </div>
-  <div class="container">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-11 col-lg-9">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <p>
-                {% for tag in post.tags.all %}
-                  <span class="highlight-text-color">
-                    <i class="bi bi-tag"></i>
-                  </span>
-                  <b> {{ tag.category }}:</b>
-                  {% comment %} <a href="{% url "posts:tag_detail" tag_categeory_slug=tag.category.slug tag_slug=tag.slug %}"> {% endcomment %}
-                  <a href="/tag/{{tag.category.slug}}/{{tag.slug}}/">
-                  <i>{{ tag.name }}</i>
-                  </a>
-                  <br />
-                {% endfor %}
-              </p>
-            </div>
-            <div class="col">
-              <p>
-                <b>Студия:</b>
-                <i>«{{ post.studio }}»</i>
-                <br />
-                <b>Название:</b>
-                <i>«{{ post.name }}»</i>
-                <br />
-                <b>Год:</b>
-                {{ post.year }}
-                <br />
-                <b>Кадров:</b>
-                <i>{{ frames.count }}</i>
-                <br />
-                <b>Индекс:</b>
-                {{ post.index }}
-                <br />
-                <b>Номер:</b>
-                {{ post.number }}
-                <br />
-                <b>Цвет:</b>
-                {{ post.color }}
-                <br />
-                <b>Качество:</b>
-                {{ post.quality }}
-                <br />
-                <b>Плёнка:</b>
-                {{ post.film }}
-                <br />
-                <b>Тип Плёнки:</b>
-                {{ post.film_type }}
-                <br />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    {% include 'includes/post_is_diafilm.html' %}
   {% endif %}
   <div class="container">
     <div class="row justify-content-center">
