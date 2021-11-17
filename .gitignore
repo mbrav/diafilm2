@@ -81,13 +81,9 @@ models.pdf
 *.backup
 rabbitmq/
 *.sqlite3
-backend/celerybeat-schedule
 
 # Jupyter notebook, scripts and tests #
 jupyter-notes/
-backend/api/tests/credentials.json
-backend/api/tests/token.json
-backend/api/tests/event-list.txt
 
 # Node #
 node_modules/
@@ -106,9 +102,9 @@ db-design.sqbpro
 favicon_io.zip
 *.7z
 *.zip
-backend/parsing/
-backend/parsing/data/
 backend/about/email/credentials.json
-backend/fixtures/
 backend/reload-db.sh
-backend/parsing/*
+backend/diafilms/management/parsing/
+backend/diafilms/management/fixtures/
+backend/diafilms/management/html/
+backend/diafilms/management/data/
