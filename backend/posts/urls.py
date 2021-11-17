@@ -6,10 +6,11 @@ urlpatterns = [
     # Основное
     path('', views.post_list, name='index'),
     path('diafilms/random/', views.diafilms_random, name='diafilms_random'),
-#     path('groups/', views.group_list, name='group_list'),
+    path('groups/', views.group_list, name='group_list'),
     path('group/<slug:group_slug>/', views.group_detail, name='group_detail'),
     path('tags/', views.tag_list, name='tag_list'),
-    path('tag/<slug:tag_category_slug>/<slug:tag_slug>/', views.tag_detail, name='tag_detail'),
+    path('tag/<slug:tag_category_slug>/<slug:tag_slug>/',
+         views.tag_detail, name='tag_detail'),
     path('search/', views.post_search, name='post_search'),
     path('follow/', views.follow_index, name='post_follow_list'),
 
