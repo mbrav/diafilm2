@@ -42,6 +42,7 @@ class PostAdmin(admin.ModelAdmin):
         'text',
     )
 
+    autocomplete_fields = ['groups', 'tags']
     empty_value_display = '-пусто-'
 
 
@@ -66,6 +67,7 @@ class CommentAdmin(admin.ModelAdmin):
         'post',
     )
 
+    autocomplete_fields = ['post']
     empty_value_display = '-пусто-'
 
 
@@ -89,6 +91,7 @@ class FollowAdmin(admin.ModelAdmin):
         'created',
     )
 
+
 @admin.register(TagCategory)
 class TagCategory(admin.ModelAdmin):
     list_per_page = 100
@@ -108,6 +111,7 @@ class TagCategory(admin.ModelAdmin):
     ordering = (
         'name',
     )
+
 
 @admin.register(Tag)
 class Tag(admin.ModelAdmin):

@@ -1,5 +1,5 @@
 # Production
-Django==3.2.7
+Django==3.2.8
 django-debug-toolbar==3.2.2
 django-environ==0.6.0
 mixer==7.1.2
@@ -12,13 +12,15 @@ six==1.16.0
 sorl-thumbnail==12.7.0
 
 # For gmail support
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
+# google-api-python-client
+# google-auth-httplib2
+# google-auth-oauthlib
 
 ## Development
 flake8==3.9.2
 autopep8==1.5.7
+transliterate
+beautifulsoup4
 # jupyter==1.0.0
 # jupyterthemes==0.20.0
 # transliterate==1.10.2
