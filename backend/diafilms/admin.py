@@ -22,6 +22,7 @@ class Film(admin.ModelAdmin):
         '-id',
     )
 
+    autocomplete_fields = ['groups', 'tags']
     empty_value_display = '-пусто-'
 
 
@@ -51,6 +52,7 @@ class Frame(admin.ModelAdmin):
         'sequence',
     )
 
+    autocomplete_fields = ['film']
     empty_value_display = '-пусто-'
 
 
@@ -67,4 +69,6 @@ class FilmCover(admin.ModelAdmin):
         'film',
     )
 
+    autocomplete_fields = ['film']
+    raw_id_fields = ['image']
     empty_value_display = '-пусто-'

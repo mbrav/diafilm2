@@ -254,6 +254,20 @@ class Command(BaseCommand):
         # FilmCover.objects.using(db_name).all().delete()
         # GroupCategory.objects.using(db_name).all().delete()
 
+        cat_dict = {
+            'author': 'Автор',
+            'editor': 'Редактор',
+            'designer': 'Художественный редактор',
+            'artist': 'Художник',
+            'artistic_editor': 'Художник-оформитель',
+            'photographer': 'Фотограф'
+        }
+
+        def tag_cat(string):
+            if string in cat_dict:
+                return cat_dict[string]
+            return string
+
         for i in obj:
             if not Film.objects.using(db_name).filter(id=i['id']).exists():
                 print(f'Adding #{i["id"]} - {i["name"]}')
@@ -298,10 +312,10 @@ class Command(BaseCommand):
                 for c, cat in tag_categories.items():
                     c_slug = translitSlug(c)
                     select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
-                        name=c,
+                        name=tag_cat(c),
                         slug=c_slug)
                     if tag_cat_created:
-                        print(f'INFO: Created new TagCategory "{c}"')
+                        print(f'INFO: Created new TagCategory "{tag_cat(c)}"')
 
                     for tag in cat:
                         if tag != '':
@@ -312,7 +326,7 @@ class Command(BaseCommand):
                                 category=select_tag_cat)
                             if tag_created:
                                 print(
-                                    f'INFO: Created new tag {tag_slug} for category {c_slug}')
+                                    f'INFO: Created new tag {tag_slug} for category {tag_cat(c)}')
                             f.tags.add(select_tag)
                     f.category = select_tag_cat
 
