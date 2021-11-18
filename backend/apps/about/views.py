@@ -1,9 +1,10 @@
-from django.shortcuts import render
 from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string 
+from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_page
 
 from diafilm.settings import EMAIL_HOST_USER
+
 from .forms import ContactForm
 
 

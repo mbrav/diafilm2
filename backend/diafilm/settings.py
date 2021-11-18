@@ -11,10 +11,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 import environ
+import os
 from pathlib import Path
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_NAME = os.path.basename(BASE_DIR)
+ROOT_DIR = os.path.dirname(BASE_DIR)
+APPS_DIR = os.path.join(BASE_DIR, 'apps')
+
+sys.path.append(ROOT_DIR)
+sys.path.append(BASE_DIR)
+sys.path.append(APPS_DIR)
 
 # Enviorment config
 env = environ.Env()

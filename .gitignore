@@ -102,9 +102,9 @@ db-design.sqbpro
 favicon_io.zip
 *.7z
 *.zip
-backend/about/email/credentials.json
+backend/apps/about/email/credentials.json
 backend/reload-db.sh
-backend/diafilms/management/parsing/
-backend/diafilms/management/fixtures/
-backend/diafilms/management/html/
-backend/diafilms/management/data/
+backend/apps/diafilms/management/parsing/
+backend/apps/diafilms/management/fixtures/
+backend/apps/diafilms/management/html/
+backend/apps/diafilms/management/data/

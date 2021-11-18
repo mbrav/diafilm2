@@ -4,18 +4,19 @@ import json
 import os
 import re
 import sqlite3
-from pathlib import Path
 from io import StringIO
+from pathlib import Path
+
 import requests
 from bs4 import BeautifulSoup
+from diafilms.models import Film, FilmCover, Frame, Image
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
+from posts.models import GroupCategory, Tag, TagCategory
 from transliterate import translit
 
 from diafilm import settings
-from diafilms.models import Film, FilmCover, Frame, Image
-from posts.models import GroupCategory, Tag, TagCategory
 
 # Find the project base directory
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
