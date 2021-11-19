@@ -1,28 +1,22 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from apps.diafilms.models import Film
+from apps.diafilms.models import Film, FilmCover, Image 
 
 
 class FilmSerializer(serializers.ModelSerializer):
-    # category = CategorySerializer(
-    #     read_only=True,
-    #     many=False
-    # )
-    # genre = GenreSerializer(
-    #     read_only=True,
-    #     many=True
-    # )
 
-    # rating = serializers.SerializerMethodField(
-    #     read_only=True,
-    #     method_name='get_rating')
+    groups = serializers.StringRelatedField(many=True)
+    tags = serializers.StringRelatedField(many=True)
 
-    # def get_rating(self, obj):
-    #     reviews = obj.reviews.all()
-    #     score_avg = reviews.aggregate(models.Avg('score')).get('score__avg')
-    #     return None if isinstance(score_avg, type(None)) else int(score_avg)
+    film_cover = serializers.SerializerMethodField(
+        method_name='get_cover_url')
+
+    def get_cover_url(self, obj):
+        cover = FilmCover.objects.get(film=obj)
+        return cover.image.url
 
     class Meta:
         model = Film
-        fields = ('__all__')
+        fields = ('id', 'name', 'url', 'film_cover', 'image', 'text', 'studio', 'year', 'color', 'index', 'number', 'quality', 'tags', 'groups')
+        # fields = ('__all__')

@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     # plugins
     'debug_toolbar',
     'rest_framework',
+    # 'rest_framework_swagger'
     'sorl.thumbnail',
 
     # diafilm apps
