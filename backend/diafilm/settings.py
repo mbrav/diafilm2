@@ -17,13 +17,6 @@ import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-PROJECT_NAME = os.path.basename(BASE_DIR)
-ROOT_DIR = os.path.dirname(BASE_DIR)
-APPS_DIR = os.path.join(BASE_DIR, 'apps')
-
-sys.path.append(ROOT_DIR)
-sys.path.append(BASE_DIR)
-sys.path.append(APPS_DIR)
 
 # Enviorment config
 env = environ.Env()
@@ -64,11 +57,11 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
 
     # diafilm apps
-    'core',
-    'about',
-    'posts',
-    'diafilms',
-    'users',
+    'apps.core',
+    'apps.about',
+    'apps.posts',
+    'apps.diafilms',
+    'apps.user',
 ]
 
 MIDDLEWARE = [
@@ -189,7 +182,7 @@ CACHES = {
     }
 }
 
-CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+CSRF_FAILURE_VIEW = 'apps.core.views.csrf_failure'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

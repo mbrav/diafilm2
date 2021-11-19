@@ -21,18 +21,18 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(('posts.urls', 'posts'), namespace=None)),
-    path('about/', include(('about.urls', 'about'), namespace='about')),
-    path('auth/', include(('users.urls', 'users'), namespace='users')),
+    path('', include(('apps.posts.urls', 'posts'), namespace=None)),
+    path('about/', include(('apps.about.urls', 'about'), namespace='about')),
+    path('auth/', include(('apps.user.urls', 'users'), namespace='users')),
     path('auth/', include('django.contrib.auth.urls')),
 
     # django-debug-toolbar
     path('__debug__/', include(debug_toolbar.urls)),
 ]
 
-handler404 = 'core.views.page_not_found'
-handler500 = 'core.views.server_error'
-handler403 = 'core.views.permission_denied'
+handler404 = 'apps.core.views.page_not_found'
+handler500 = 'apps.core.views.server_error'
+handler403 = 'apps.core.views.permission_denied'
 
 if settings.DEBUG:
     urlpatterns += static(

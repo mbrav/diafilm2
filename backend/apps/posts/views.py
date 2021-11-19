@@ -1,6 +1,6 @@
 import random
 
-from diafilms.models import Film, Frame
+from apps.diafilms.models import Film, Frame
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
@@ -105,7 +105,8 @@ def group_list(request):
     page_number = request.GET.get('page')
 
     # groups = GroupCategory.objects.prefetch_related('posts')
-    groups = GroupCategory.objects.all().prefetch_related(Prefetch('posts', queryset=Post.objects.latest('-pub_date'), to_attr='last_post'))
+    groups = GroupCategory.objects.all().prefetch_related(Prefetch(
+        'posts', queryset=Post.objects.latest('-pub_date'), to_attr='last_post'))
     # groups = GroupCategory.objects.prefetch_related(Prefetch('posts', queryset=Post.objects.order_by('-pub_date')[0], to_attr='last_post'))
 
     paginator = Paginator(groups, 6)
@@ -184,7 +185,8 @@ def post_search(request):
         post_list = Film.objects.prefetch_related('groups').filter(
             Q(name__icontains=q_low) | Q(name__icontains=q_cap)).order_by('id')
     else:
-        post_list = Film.objects.prefetch_related('groups').all().order_by('id')
+        post_list = Film.objects.prefetch_related(
+            'groups').all().order_by('id')
 
     paginator = Paginator(post_list, 100)
     page = paginator.get_page(page_number)

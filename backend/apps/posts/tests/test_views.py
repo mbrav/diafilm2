@@ -1,7 +1,7 @@
 from django import forms
 from django.core.cache import cache
 from django.urls import reverse
-from posts.models import Follow
+from apps.posts.models import Follow
 
 from .test_factory import TestModelFactory
 
@@ -77,7 +77,8 @@ class GroupsViewsTests(TestModelFactory):
         """Шаблон group_detail сформирован с правильным контекстом."""
         cache.clear()
         response = self.authorized_client.get(
-            reverse('posts:group_detail', kwargs={'group_slug': self.group.slug})
+            reverse('posts:group_detail', kwargs={
+                    'group_slug': self.group.slug})
         )
         first_object = response.context['page_obj'].object_list[0]
         self.assertEqual(first_object.id, self.post.id)
