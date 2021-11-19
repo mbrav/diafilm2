@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.test import Client, TestCase
 from PIL import Image, ImageDraw, ImageFont
+
 from apps.posts.models import Comment, Group, Post
 
 User = get_user_model()

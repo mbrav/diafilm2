@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import environ
 import os
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
 
     # plugins
     'debug_toolbar',
+    'rest_framework',
     'sorl.thumbnail',
 
     # diafilm apps
@@ -62,6 +64,7 @@ INSTALLED_APPS = [
     'apps.posts',
     'apps.diafilms',
     'apps.user',
+    'apps.api',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +133,18 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 # указываем директорию, в которую будут складываться файлы писем
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

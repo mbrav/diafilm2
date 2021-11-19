@@ -9,13 +9,13 @@ from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
-from apps.diafilms.models import Film, FilmCover, Frame, Image
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
-from apps.posts.models import GroupCategory, Tag, TagCategory
 from transliterate import translit
 
+from apps.diafilms.models import Film, FilmCover, Frame, Image
+from apps.posts.models import GroupCategory, Tag, TagCategory
 from diafilm import settings
 
 # Find the project base directory

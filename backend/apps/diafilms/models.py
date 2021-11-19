@@ -1,4 +1,5 @@
 from django.db import models
+
 from apps.posts.models import Post
 
 

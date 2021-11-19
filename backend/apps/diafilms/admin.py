@@ -1,5 +1,6 @@
-from apps.diafilms.models import Film, FilmCover, Frame, Image
 from django.contrib import admin
+
+from apps.diafilms.models import Film, FilmCover, Frame, Image
 
 
 @admin.register(Film)
