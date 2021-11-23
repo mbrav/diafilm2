@@ -14,6 +14,7 @@ from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from transliterate import translit
 
+from .utils.util import timer
 from apps.diafilms.models import Film, FilmCover, Frame, Image
 from apps.posts.models import GroupCategory, Tag, TagCategory
 from diafilm import settings
@@ -29,6 +30,8 @@ HTML_DIR = BASE_DIR + '/html/'
 film_json_path = DATA_DIR + 'post-metadata-all.json'
 film_json_path_min = DATA_DIR + 'post-metadata-min.json'
 html_table_path = DATA_DIR + 'diafilms-v2.html'
+
+DEBUG = True
 
 key_dict = {
     0: 'id',
@@ -49,12 +52,6 @@ key_dict = {
     15: 'film',
     16: 'quality',
 }
-
-
-def translitSlug(string):
-    string = translit(string, 'ru', reversed=True).lower()
-    string = '-'.join(string.split())
-    return slugify(string)
 
 
 def getFilmTable():
@@ -219,7 +216,24 @@ class Command(BaseCommand):
             self.importFilmsFromJson(self.memory_db_name)
             self.sqliteDumpFromMemory()
 
+    def translitSlug(self, string):
+        string = translit(string, 'ru', reversed=True).lower()
+        string = '-'.join(string.split())
+        return slugify(string)
+
+    @timer
     def importFilmsFromJson(self, db_name=file_db_name):
+        """import files from database
+
+        Args:
+            db_name ([type], optional): [description]. Defaults to file_db_name.
+
+        Optimizatation history with DEBUG = True:
+
+            Importing 100 films timings:
+                - Initial 49.66 secs
+                - Bulk import
+        """
 
         # Get User
         User = get_user_model()
@@ -228,8 +242,11 @@ class Command(BaseCommand):
         # read and parse full JSON file
         new_json = open(film_json_path, mode='r')
         data = new_json.read()
+        obj = {}
         obj = json.loads(data)
-        print('JSON Read, #112:', obj[112]['name'])
+
+        if DEBUG:
+            obj = obj[:100]
 
         cat_dict = {
             'author': 'Автор',
@@ -245,89 +262,119 @@ class Command(BaseCommand):
                 return cat_dict[string]
             return string
 
-        for i in obj:
-            if not Film.objects.using(db_name).filter(id=i['id']).exists():
-                print(f'Adding #{i["id"]} - {i["name"]}')
-                text_not_empty = i['description']
-                if len(text_not_empty) == 0:
-                    text_not_empty = i['name']
-                f = Film.objects.using(db_name).create(
-                    author=user,
-                    id=int('0'+i['id']),
-                    name=i['name'],
-                    url=i['url'],
-                    studio=i['studio'],
-                    year=int('0'+i['year']),
-                    color=i['color'],
-                    film_type=i['type'],
-                    index=i['index'],
-                    number=i['number'],
-                    film_name=i['film'],
-                    quality=i['quality'],
-                    text=text_not_empty,
-                )
+        def genUnboundedObjects(_obj):
+            cats = []
+            for c, cat in cat_dict.items():
+                c_slug = self.translitSlug(c)
+                new_cat = TagCategory(name=tag_cat(c), slug=c_slug)
+                cats.append(new_cat)
+            TagCategory.objects.bulk_create(cats)
 
+            groups = []
+            for i in _obj:
                 for group in i['categories']:
-                    gr, gr_create = GroupCategory.objects.using(db_name).get_or_create(
-                        name=group,
-                        slug=translitSlug(group))
-                    if gr_create:
-                        print(f'INFO: Created new GroupCategory "{group}"')
+                    slug = self.translitSlug(group)
+                    name_check = any(_gr.name == group for _gr in groups)
+                    slug_check = any(_gr.slug == slug for _gr in groups)
 
-                    f.groups.add(gr)
+                    if (name_check or slug_check) is False:
+                        print(name_check, slug_check, group, slug)
+                        gr = GroupCategory(
+                            name=group,
+                            slug=self.translitSlug(group))
+                        groups.append(gr)
 
-                # Create dict for Foreign keys
-                tag_categories = {
-                    'author': i['author'],
-                    'artist': i['artist'],
-                    'designer': i['designer'],
-                    'editor': i['editor'],
-                    'artistic_editor': i['artistic_editor'],
-                    'photographer': i['photographer'],
-                }
+            print(f'Created {len(cats)} TagCategories')
+            print(f'Created {len(groups)} Groups')
 
-                for c, cat in tag_categories.items():
-                    c_slug = translitSlug(c)
-                    select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
-                        name=tag_cat(c),
-                        slug=c_slug)
-                    if tag_cat_created:
-                        print(f'INFO: Created new TagCategory "{tag_cat(c)}"')
+        genUnboundedObjects(obj)
+        # models = list(map(genBoundedObjects, obj))
 
-                    for tag in cat:
-                        if tag != '':
-                            tag_slug = translitSlug(tag)
-                            select_tag, tag_created = Tag.objects.using(db_name).get_or_create(
-                                name=tag,
-                                slug=tag_slug,
-                                category=select_tag_cat)
-                            if tag_created:
-                                print(
-                                    f'INFO: Created new tag {tag_slug} for category {tag_cat(c)}')
-                            f.tags.add(select_tag)
-                    f.category = select_tag_cat
-
-                # Create frames
-                for key in range(len(i['img'])):
-                    fr = Frame.objects.using(db_name).create(
-                        url=i['img'][key],
-                        external=True,
-                        film=f,
-                        sequence=key,
+        def slow():
+            for i in obj:
+                if not Film.objects.using(db_name).filter(id=i['id']).exists():
+                    print(f'Adding #{i["id"]} - {i["name"]}')
+                    text_not_empty = i['description']
+                    if len(text_not_empty) == 0:
+                        text_not_empty = i['name']
+                    f = Film.objects.using(db_name).create(
+                        author=user,
+                        id=int('0'+i['id']),
+                        name=i['name'],
+                        url=i['url'],
+                        studio=i['studio'],
+                        year=int('0'+i['year']),
+                        color=i['color'],
+                        film_type=i['type'],
+                        index=i['index'],
+                        number=i['number'],
+                        film_name=i['film'],
+                        quality=i['quality'],
+                        text=text_not_empty,
                     )
 
-                # Check if image exists for cover image
-                img = None
-                try:
-                    img = Image.objects.using(
-                        db_name).filter(url=i['img-cover'])[0]
-                except:
-                    img = Image(url=i['img-cover'])
-                    img.save()
-                    print('image not found:', i['img-cover'])
+                    for group in i['categories']:
+                        gr, gr_create = GroupCategory.objects.using(db_name).get_or_create(
+                            name=group,
+                            slug=self.translitSlug(group))
+                        if gr_create:
+                            print(f'INFO: Created new GroupCategory "{group}"')
 
-                # Create cover image
-                film_cover = FilmCover.objects.using(db_name).create(
-                    film=f,
-                    image=img
-                )
+                        f.groups.add(gr)
+
+                    # Create dict for Foreign keys
+                    tag_categories = {
+                        'author': i['author'],
+                        'artist': i['artist'],
+                        'designer': i['designer'],
+                        'editor': i['editor'],
+                        'artistic_editor': i['artistic_editor'],
+                        'photographer': i['photographer'],
+                    }
+
+                    for c, cat in tag_categories.items():
+                        c_slug = self.translitSlug(c)
+                        select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
+                            name=tag_cat(c),
+                            slug=c_slug)
+                        if tag_cat_created:
+                            print(
+                                f'INFO: Created new TagCategory "{tag_cat(c)}"')
+
+                        for tag in cat:
+                            if tag != '':
+                                tag_slug = self.translitSlug(tag)
+                                select_tag, tag_created = Tag.objects.using(db_name).get_or_create(
+                                    name=tag,
+                                    slug=tag_slug,
+                                    category=select_tag_cat)
+                                if tag_created:
+                                    print(
+                                        f'INFO: Created new tag {tag_slug} for category {tag_cat(c)}')
+                                f.tags.add(select_tag)
+                        f.category = select_tag_cat
+
+                    # Create frames
+                    for key in range(len(i['img'])):
+                        fr = Frame.objects.using(db_name).create(
+                            url=i['img'][key],
+                            external=True,
+                            film=f,
+                            sequence=key,
+                        )
+
+                    # Check if image exists for cover image
+                    img = None
+                    try:
+                        img = Image.objects.using(
+                            db_name).filter(url=i['img-cover'])[0]
+                    except:
+                        img = Image(url=i['img-cover'])
+                        img.save()
+                        print('image not found:', i['img-cover'])
+
+                    # Create cover image
+                    film_cover = FilmCover.objects.using(db_name).create(
+                        film=f,
+                        image=img
+                    )
