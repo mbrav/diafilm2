@@ -63,12 +63,7 @@ def getFilmTable():
     r = requests.get(url)
     with open(html_table_path, 'w') as file:
         file.write(r.text)
-
     table = open(html_table_path, 'r')
-
-    # for i, th in enumerate(thead.find_all('th')):
-    #     print(i, key_dict[i], th.get_text())
-
     return table
 
 
@@ -157,13 +152,6 @@ def scrapeFilms(table):
     print('Number of images scraped', img_count)
 
 
-def copy_database(source_connection, dest_dbname=':memory:'):
-    script = ''.join(source_connection.iterdump())
-    dest_conn = sqlite3.connect(dest_dbname)
-    dest_conn.executescript(script)
-    return dest_conn
-
-
 class Command(BaseCommand):
     """Django command to pause execution until database is available"""
 
@@ -231,12 +219,6 @@ class Command(BaseCommand):
             self.importFilmsFromJson(self.memory_db_name)
             self.sqliteDumpFromMemory()
 
-    def sqliteLoadToMemory(self):
-        pass
-
-    def sqliteDumpFromMemory(self):
-        pass
-
     def importFilmsFromJson(self, db_name=file_db_name):
 
         # Get User
@@ -248,12 +230,6 @@ class Command(BaseCommand):
         data = new_json.read()
         obj = json.loads(data)
         print('JSON Read, #112:', obj[112]['name'])
-
-        # Film.objects.using(db_name).all().delete()
-        # Image.objects.using(db_name).all().delete()
-        # Frame.objects.using(db_name).all().delete()
-        # FilmCover.objects.using(db_name).all().delete()
-        # GroupCategory.objects.using(db_name).all().delete()
 
         cat_dict = {
             'author': 'Автор',
