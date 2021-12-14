@@ -6,6 +6,7 @@ import re
 import sqlite3
 from io import StringIO
 from pathlib import Path
+from tqdm import tqdm
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,7 +15,7 @@ from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
 from transliterate import translit
 
-from .utils.util import timer
+from .utils.util import timer, async_looper
 from apps.diafilms.models import Film, FilmCover, Frame, Image
 from apps.posts.models import GroupCategory, Tag, TagCategory
 from diafilm import settings
@@ -87,10 +88,13 @@ def scrapeFilms(table):
     new_data = []
 
     tr = tbody.find_all('tr')
-    for p in range(len(pages)):
-        # for p in range(50):
-        with open(pages[p], 'r') as page:
 
+    # Implemented async, but no improvement as expected
+    # since async only helps in IO bounded processes, not CPU bounded ones
+    @async_looper(concurrent=4, items=pages, desc='Parsing HTML files')
+    def parse_pages(_page):
+        p = pages.index(_page)
+        with open(pages[p], 'r') as page:
             dict = {
                 'id': re.findall('\d+', page.name)[0],
                 'img': [],
@@ -101,13 +105,15 @@ def scrapeFilms(table):
 
             for i in key_dict:
                 if i == 1:
-                    dict[key_dict[i]] = tr[p].find_all('td')[i].text.strip()
+                    dict[key_dict[i]] = tr[p].find_all('td')[
+                        i].text.strip()
                     dict['url'] = tr[p].find('a').get('href').strip()
                 elif 8 < i < 15:
                     tags = tr[p].find_all('td')[i].text.split(',')
                     dict[key_dict[i]] = [x.strip() for x in tags]
                 else:
-                    dict[key_dict[i]] = tr[p].find_all('td')[i].text.strip()
+                    dict[key_dict[i]] = tr[p].find_all('td')[
+                        i].text.strip()
 
             soup = BeautifulSoup(page.read(), 'html.parser')
             title = soup.find(id='news-title').get_text()
@@ -131,9 +137,10 @@ def scrapeFilms(table):
                 dict['img'].append(site_url + img.get('src'))
 
             new_data.append(dict)
-            print(p, title, 'DONE')
 
-    print(f'TEST, #673: {new_data[673]}')
+    parse_pages()
+
+    # print(f'TEST, #67: {new_data[67]}')
 
     with open(film_json_path, 'w+') as f:
         json.dump(new_data, f)
@@ -231,7 +238,7 @@ class Command(BaseCommand):
         Optimizatation history with DEBUG = True:
 
             Importing 100 films timings:
-                - Initial 49.66 secs
+                - Initial 49 sec, 2 it/s
                 - Bulk import
         """
 
@@ -262,38 +269,12 @@ class Command(BaseCommand):
                 return cat_dict[string]
             return string
 
-        def genUnboundedObjects(_obj):
-            cats = []
-            for c, cat in cat_dict.items():
-                c_slug = self.translitSlug(c)
-                new_cat = TagCategory(name=tag_cat(c), slug=c_slug)
-                cats.append(new_cat)
-            TagCategory.objects.bulk_create(cats)
-
-            groups = []
-            for i in _obj:
-                for group in i['categories']:
-                    slug = self.translitSlug(group)
-                    name_check = any(_gr.name == group for _gr in groups)
-                    slug_check = any(_gr.slug == slug for _gr in groups)
-
-                    if (name_check or slug_check) is False:
-                        print(name_check, slug_check, group, slug)
-                        gr = GroupCategory(
-                            name=group,
-                            slug=self.translitSlug(group))
-                        groups.append(gr)
-
-            print(f'Created {len(cats)} TagCategories')
-            print(f'Created {len(groups)} Groups')
-
-        genUnboundedObjects(obj)
-        # models = list(map(genBoundedObjects, obj))
-
         def slow():
-            for i in obj:
+            pbar = tqdm(obj, desc='Importing Films')
+            for i in pbar:
                 if not Film.objects.using(db_name).filter(id=i['id']).exists():
-                    print(f'Adding #{i["id"]} - {i["name"]}')
+                    pbar.set_description(
+                        f'#{i["id"]} {i["name"][:5]}..')
                     text_not_empty = i['description']
                     if len(text_not_empty) == 0:
                         text_not_empty = i['name']
@@ -317,9 +298,8 @@ class Command(BaseCommand):
                         gr, gr_create = GroupCategory.objects.using(db_name).get_or_create(
                             name=group,
                             slug=self.translitSlug(group))
-                        if gr_create:
-                            print(f'INFO: Created new GroupCategory "{group}"')
-
+                        # if gr_create:
+                        #     pbar.set_description(f'Group   {group[:5]}..')
                         f.groups.add(gr)
 
                     # Create dict for Foreign keys
@@ -337,9 +317,9 @@ class Command(BaseCommand):
                         select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
                             name=tag_cat(c),
                             slug=c_slug)
-                        if tag_cat_created:
-                            print(
-                                f'INFO: Created new TagCategory "{tag_cat(c)}"')
+                        # if tag_cat_created:
+                        #     pbar.set_description(
+                        #         f'Tag cat. {tag_cat(c)[:5]}..')
 
                         for tag in cat:
                             if tag != '':
@@ -348,9 +328,9 @@ class Command(BaseCommand):
                                     name=tag,
                                     slug=tag_slug,
                                     category=select_tag_cat)
-                                if tag_created:
-                                    print(
-                                        f'INFO: Created new tag {tag_slug} for category {tag_cat(c)}')
+                                # if tag_created:
+                                # pbar.set_description(
+                                #     f'{tag_slug(c)[:5]} for {tag_cat(c)[:5]}')
                                 f.tags.add(select_tag)
                         f.category = select_tag_cat
 
@@ -371,10 +351,12 @@ class Command(BaseCommand):
                     except:
                         img = Image(url=i['img-cover'])
                         img.save()
-                        print('image not found:', i['img-cover'])
+                        pbar.set_description(
+                            f'image not found:')
 
                     # Create cover image
                     film_cover = FilmCover.objects.using(db_name).create(
                         film=f,
                         image=img
                     )
+        slow()
