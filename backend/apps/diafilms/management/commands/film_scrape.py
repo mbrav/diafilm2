@@ -32,7 +32,6 @@ film_json_path = DATA_DIR + 'post-metadata-all.json'
 film_json_path_min = DATA_DIR + 'post-metadata-min.json'
 html_table_path = DATA_DIR + 'diafilms-v2.html'
 
-DEBUG = True
 
 key_dict = {
     0: 'id',
@@ -175,6 +174,7 @@ class Command(BaseCommand):
     memory_db_name = 'memory'
 
     def __init__(self):
+        self.DEBUG = False
         file_db = settings.DATABASES[self.file_db_name]['NAME']
         memory_db = settings.DATABASES[self.memory_db_name]['NAME']
         self.file_con = sqlite3.connect(file_db)
@@ -203,6 +203,8 @@ class Command(BaseCommand):
                             parse, and save JSON to {film_json_path}', )
         parser.add_argument('-m', '--memory', action='store_true',
                             help=f'Import tables into memory then dump to sqlitefile. 10x Faster.', )
+        parser.add_argument('-d', '--debug', action='store_true',
+                            help=f'Debuging option', )
 
     def handle(self, *args, **kwargs):
         """Handle the command"""
@@ -210,6 +212,10 @@ class Command(BaseCommand):
         imp = kwargs['import']
         scrape = kwargs['scrape']
         memory = kwargs['memory']
+        debug = kwargs['debug']
+
+        if debug:
+            self.DEBUG = True
 
         if scrape:
             table = getFilmTable()
@@ -228,7 +234,6 @@ class Command(BaseCommand):
         string = '-'.join(string.split())
         return slugify(string)
 
-    @timer
     def importFilmsFromJson(self, db_name=file_db_name):
         """import files from database
 
@@ -252,7 +257,7 @@ class Command(BaseCommand):
         obj = {}
         obj = json.loads(data)
 
-        if DEBUG:
+        if self.DEBUG:
             obj = obj[:100]
 
         cat_dict = {
@@ -268,6 +273,79 @@ class Command(BaseCommand):
             if string in cat_dict:
                 return cat_dict[string]
             return string
+
+        def genUnboundedObjects(_object):
+            tag_cats = []
+            for index, (t_c, cat) in enumerate(cat_dict.items()):
+                c_slug = self.translitSlug(t_c)
+                new_cat = TagCategory(name=tag_cat(
+                    t_c), slug=c_slug, id=index+1)
+                tag_cats.append(new_cat)
+
+            TagCategory.objects.bulk_create(tag_cats)
+
+            tags = []
+            for _obj in _object:
+                # Create dict for Foreign keys
+                tag_categories = {
+                    'author': _obj['author'],
+                    'artist': _obj['artist'],
+                    'designer': _obj['designer'],
+                    'editor': _obj['editor'],
+                    'artistic_editor': _obj['artistic_editor'],
+                    'photographer': _obj['photographer'],
+                }
+
+                for c, cat in tag_categories.items():
+                    for tag in list(filter(None, cat)):
+                        tag_slug = self.translitSlug(tag)
+                        category = None
+                        for x in tag_cats:
+                            if x.slug == c:
+                                category = x
+
+                        name = tag
+
+                        # name_check = any(
+                        #     t.name == category for t in tags)
+                        slug_check = any(
+                            t.slug == tag_slug for t in tags)
+
+                        if slug_check is False:
+                            new_tag = Tag(
+                                id=len(tags)+1,
+                                name=name,
+                                slug=tag_slug,
+                                category=category,
+                                category_id=category.id
+                            )
+                            tags.append(new_tag)
+
+            Tag.objects.bulk_create(tags)
+
+            # groups = []
+            # for _obj in _object:
+            #     for group in i['categories']:
+            #         slug = self.translitSlug(group)
+            #         name_check = any(_gr.name == group for _gr in groups)
+            #         slug_check = any(_gr.slug == slug for _gr in groups)
+
+            #         if (name_check or slug_check) is False:
+            #             print(name_check, slug_check, group, slug)
+            #             gr = GroupCategory(
+            #                 name=group,
+            #                 slug=self.translitSlug(group))
+            #             groups.append(gr)
+
+            return {
+                'tag_categories': tag_cats,
+                'tags': tags,
+                # 'groups': groups,
+            }
+
+        models = genUnboundedObjects(obj)
+        print(f"Categories: {len(models['tag_categories'])}")
+        print(f"Tags: {len(models['tags'])}")
 
         def slow():
             pbar = tqdm(obj, desc='Importing Films')
@@ -359,4 +437,4 @@ class Command(BaseCommand):
                         film=f,
                         image=img
                     )
-        slow()
+        # slow()
