@@ -1,7 +1,6 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from apps.diafilms.models import Film, FilmCover, Image 
+from apps.diafilms.models import Film, FilmCover
 
 
 class FilmSerializer(serializers.ModelSerializer):
@@ -18,5 +17,5 @@ class FilmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Film
-        fields = ('id', 'name', 'url', 'film_cover', 'image', 'text', 'studio', 'year', 'color', 'index', 'number', 'quality', 'tags', 'groups')
-        # fields = ('__all__')
+        fields = ('id', 'name', 'url', 'film_cover', 'image', 'text', 'studio',
+                  'year', 'color', 'index', 'number', 'quality', 'tags', 'groups')

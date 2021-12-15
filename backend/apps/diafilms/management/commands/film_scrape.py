@@ -1,4 +1,3 @@
-import csv
 import glob
 import json
 import os
@@ -68,7 +67,7 @@ def getFilmTable():
 def scrapeFilms(table):
 
     table_soup = BeautifulSoup(table.read(), 'html.parser')
-    thead = table_soup.find('thead')
+    # thead = table_soup.find('thead')
     tbody = table_soup.find('tbody')
     trs = tbody.find_all('tr')
 
@@ -103,12 +102,11 @@ def scrapeFilms(table):
 
     new_data = []
     tr = tbody.find_all('tr')
+
     # Implemented async, but no improvement as expected
     # since async only helps in IO bounded processes, not CPU bounded ones
-
     @async_looper(concurrent=8, items=pages, desc='Parsing HTML files')
     def parse_pages(_page):
-
         p = pages.index(_page)
         table_id = lookup_table_index(_page) - 1
 
@@ -221,9 +219,9 @@ class Command(BaseCommand):
                             help=f'Scrape new films and save into {HTML_DIR} \
                             parse, and save JSON to {film_json_path}', )
         parser.add_argument('-m', '--memory', action='store_true',
-                            help=f'Import tables into memory then dump to sqlitefile. 10x Faster.', )
+                            help='Import tables into memory then dump to sqlitefile. 10x Faster.', )
         parser.add_argument('-d', '--debug', action='store_true',
-                            help=f'Debuging option', )
+                            help='Debuging option', )
 
     def handle(self, *args, **kwargs):
         """Handle the command"""
@@ -259,7 +257,7 @@ class Command(BaseCommand):
         Args:
             db_name ([type], optional): [description]. Defaults to file_db_name.
 
-        Optimizatation history with DEBUG = True:
+        Optimization history with DEBUG = True:
 
             Importing 100 films timings:
                 - Initial 49 sec, 2 it/s
@@ -360,9 +358,9 @@ class Command(BaseCommand):
 
             films = []
             for _obj in _object:
-                text_not_empty = i['description']
+                text_not_empty = _obj['description']
                 if len(text_not_empty) == 0:
-                    text_not_empty = i['name']
+                    text_not_empty = _obj['name']
                 f = Film(
                     author=user,
                     id=int('0'+_obj['id']),
@@ -378,18 +376,32 @@ class Command(BaseCommand):
                     quality=_obj['quality'],
                     text=text_not_empty)
 
+                for group in _obj['categories']:
+                    name = group
+                    slug = self.translitSlug(group)
+                    group_object = None
+                    for g in groups:
+                        if g.slug == slug:
+                            group_object = g
+
+                    # print(group_object)
+                    f.groups.add(group_object)
+
+                films.append(f)
+
             return {
                 'tag_categories': tag_categories,
                 'tags': tags,
                 'groups': groups,
+                'films': films,
             }
 
         # models = genUnboundedObjects(obj)
         # print(f"Categories: {len(models['tag_categories'])}")
         # print(f"Tags: {len(models['tags'])}")
         # print(f"Groups: {len(models['groups'])}")
-
-        print(obj[4356])
+        # print(f"Films: {len(models['films'])}")
+        # print(obj[4356])
 
         def slow():
             pbar = tqdm(obj, desc='Importing Films')
@@ -450,12 +462,11 @@ class Command(BaseCommand):
 
                     # Create frames
                     for key in range(len(i['img'])):
-                        fr = Frame.objects.using(db_name).create(
+                        Frame.objects.using(db_name).create(
                             url=i['img'][key],
                             external=True,
                             film=f,
-                            sequence=key,
-                        )
+                            sequence=key)
 
                     # Check if image exists for cover image
                     img = None
@@ -466,11 +477,11 @@ class Command(BaseCommand):
                         img = Image(url=i['img-cover'])
                         img.save()
                         pbar.set_description(
-                            f'image not found:')
+                            'image not found:')
 
                     # Create cover image
-                    film_cover = FilmCover.objects.using(db_name).create(
+                    FilmCover.objects.using(db_name).create(
                         film=f,
                         image=img
                     )
-        # slow()
+        slow()
