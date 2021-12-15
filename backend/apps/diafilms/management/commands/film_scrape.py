@@ -32,6 +32,8 @@ film_json_path = DATA_DIR + 'post-metadata-all.json'
 film_json_path_min = DATA_DIR + 'post-metadata-min.json'
 html_table_path = DATA_DIR + 'diafilms-v2.html'
 
+SITE_URL = 'https://diafilmy.su'
+
 
 key_dict = {
     0: 'id',
@@ -55,8 +57,7 @@ key_dict = {
 
 
 def getFilmTable():
-    url = 'https://diafilmy.su/base.php'
-
+    url = f'{SITE_URL}/base.php'
     r = requests.get(url)
     with open(html_table_path, 'w') as file:
         file.write(r.text)
@@ -66,84 +67,102 @@ def getFilmTable():
 
 def scrapeFilms(table):
 
-    soup = BeautifulSoup(table.read(), 'html.parser')
-    thead = soup.find('thead')
-    tbody = soup.find('tbody')
+    table_soup = BeautifulSoup(table.read(), 'html.parser')
+    thead = table_soup.find('thead')
+    tbody = table_soup.find('tbody')
+    trs = tbody.find_all('tr')
 
-    for i, tr in enumerate(tbody.find_all('tr')):
-        if os.path.exists(f'{HTML_DIR}index-{i+1}.html'):
-            pass
-        else:
-            print(f'{HTML_DIR}index-{i+1}.html', i+1,
-                  tr.find('a').text, 'does not exist')
+    @async_looper(concurrent=8, items=trs, desc='Downloading HTML files')
+    def download_pages(tr):
+        i = trs.index(tr)
+        if not os.path.exists(f'{HTML_DIR}index-{i+1}.html'):
             r = requests.get(tr.find('a').get('href'))
             with open(f'{HTML_DIR}index-{i+1}.html', 'w') as file:
                 file.write(r.text)
+    # download_pages()
 
-    # Read all pages in html folder
+    # Read all pages in html folder and sort by number in file name
     pages = glob.glob(f'{HTML_DIR}*.html')
 
-    site_url = 'https://diafilmy.su'
+    def blob_sort(name):
+        file = name.rsplit('/', 1)[-1]
+        num = int(re.search(r'\d+', file).group())
+        return num
+    pages = sorted(pages, key=lambda x: blob_sort(x))
+
+    def lookup_table_index(page_path: str) -> int:
+        with open(page_path, 'r') as page:
+            page_soup = BeautifulSoup(page.read(), 'html.parser')
+            page_url = page_soup.find(property='og:url').get('content')
+            table_el = table_soup.find(attrs={"href": page_url})
+            table_id = table_el.parent.previous_sibling.get_text()
+            return int(table_id)
+    # test_name = 4005
+    # print(f'{test_name}.html', ' -> ',
+    #       lookup_table_index(pages[test_name-1])-1)
+
     new_data = []
-
     tr = tbody.find_all('tr')
-
     # Implemented async, but no improvement as expected
     # since async only helps in IO bounded processes, not CPU bounded ones
-    @async_looper(concurrent=4, items=pages, desc='Parsing HTML files')
+
+    @async_looper(concurrent=8, items=pages, desc='Parsing HTML files')
     def parse_pages(_page):
+
         p = pages.index(_page)
+        table_id = lookup_table_index(_page) - 1
+
+        # test
+        # with open(_page, 'r') as page:
+        #     test_soup = BeautifulSoup(page.read(), 'html.parser')
+        #     desc = test_soup.find(property='og:description').get('content')
+        #     title = test_soup.find(property='og:title').get('content')
+        #     title_t = tr[table_id].find_all('td')[1].text.strip()
+        #     print(
+        #         f'file {p+1}.html\nindexes {p}, {table_id}\ntitle "{title}"\ntitle2: "{title_t}"\n')
+
         with open(pages[p], 'r') as page:
-            dict = {
-                'id': re.findall('\d+', page.name)[0],
+            meta = {
+                'id': p + 1,
                 'img': [],
                 'img-cover': '',
                 'description': '',
                 'categories': []
             }
 
-            for i in key_dict:
-                if i == 1:
-                    dict[key_dict[i]] = tr[p].find_all('td')[
-                        i].text.strip()
-                    dict['url'] = tr[p].find('a').get('href').strip()
-                elif 8 < i < 15:
-                    tags = tr[p].find_all('td')[i].text.split(',')
-                    dict[key_dict[i]] = [x.strip() for x in tags]
+            for key in key_dict:
+                if key == 1:
+                    meta[key_dict[key]] = tr[table_id].find_all('td')[
+                        key].text.strip()
+                    meta['url'] = tr[table_id].find('a').get('href').strip()
+                elif 8 < key < 15:
+                    tags = tr[table_id].find_all('td')[key].text.split(',')
+                    meta[key_dict[key]] = [x.strip() for x in tags]
                 else:
-                    dict[key_dict[i]] = tr[p].find_all('td')[
-                        i].text.strip()
+                    meta[key_dict[key]] = tr[table_id].find_all('td')[
+                        key].text.strip()
 
             soup = BeautifulSoup(page.read(), 'html.parser')
-            title = soup.find(id='news-title').get_text()
+            txt_with_category = soup.find(class_='berrorstxt')
             img_cover = soup.find(property='og:image').get('content')
             desc = soup.find(property='og:description').get('content')
             slide = soup.find(class_='cycle-slideshow')
-            txt_with_category = soup.find(class_='berrorstxt')
 
             # Set cover image
-            dict['img-cover'] = img_cover.strip()
-
+            meta['img-cover'] = img_cover.strip()
             # Set description
-            dict['description'] = desc.strip()
-
+            meta['description'] = desc.strip()
             # Set categories
             for a in txt_with_category.find_all(href=re.compile('diafilmy.su/diafilmy/')):
-                dict['categories'].append(a.get_text().strip())
-
+                meta['categories'].append(a.get_text().strip())
             # Get gallery images
             for img in slide.find_all('img'):
-                dict['img'].append(site_url + img.get('src'))
-
-            new_data.append(dict)
-
+                meta['img'].append(SITE_URL + img.get('src'))
+            new_data.append(meta)
     parse_pages()
-
-    # print(f'TEST, #67: {new_data[67]}')
 
     with open(film_json_path, 'w+') as f:
         json.dump(new_data, f)
-
     with open(film_json_path_min, 'w+') as f:
         json.dump(new_data[0:100], f)
 
@@ -152,7 +171,7 @@ def scrapeFilms(table):
         for j in range(len(new_data[i]['img'])):
             img_count += 1
 
-    print('Number of images scraped', img_count)
+    print('Number of image urls', img_count)
 
 
 class Command(BaseCommand):
@@ -254,8 +273,8 @@ class Command(BaseCommand):
         # read and parse full JSON file
         new_json = open(film_json_path, mode='r')
         data = new_json.read()
-        obj = {}
         obj = json.loads(data)
+        new_json.close()
 
         if self.DEBUG:
             obj = obj[:100]
@@ -276,12 +295,13 @@ class Command(BaseCommand):
 
         def genUnboundedObjects(_object):
             tag_cats = []
-            for index, (t_c, cat) in enumerate(cat_dict.items()):
+            for t_c, cat in cat_dict.items():
                 c_slug = self.translitSlug(t_c)
-                new_cat = TagCategory(name=tag_cat(
-                    t_c), slug=c_slug, id=index+1)
+                new_cat = TagCategory(
+                    name=tag_cat(t_c),
+                    slug=c_slug,
+                    id=len(tag_cats)+1)
                 tag_cats.append(new_cat)
-
             TagCategory.objects.bulk_create(tag_cats)
 
             tags = []
@@ -320,32 +340,56 @@ class Command(BaseCommand):
                                 category_id=category.id
                             )
                             tags.append(new_tag)
-
             Tag.objects.bulk_create(tags)
 
-            # groups = []
-            # for _obj in _object:
-            #     for group in i['categories']:
-            #         slug = self.translitSlug(group)
-            #         name_check = any(_gr.name == group for _gr in groups)
-            #         slug_check = any(_gr.slug == slug for _gr in groups)
+            groups = []
+            for _obj in _object:
+                for group in _obj['categories']:
+                    slug = self.translitSlug(group)
+                    # name_check = any(gr.name == group for gr in groups)
+                    slug_check = any(gr.slug == slug for gr in groups)
 
-            #         if (name_check or slug_check) is False:
-            #             print(name_check, slug_check, group, slug)
-            #             gr = GroupCategory(
-            #                 name=group,
-            #                 slug=self.translitSlug(group))
-            #             groups.append(gr)
+                    if slug_check is False:
+                        # print(name_check, slug_check, group, slug)
+                        gr = GroupCategory(
+                            id=len(groups)+1,
+                            name=group,
+                            slug=self.translitSlug(group))
+                        groups.append(gr)
+            GroupCategory.objects.bulk_create(groups)
+
+            films = []
+            for _obj in _object:
+                text_not_empty = i['description']
+                if len(text_not_empty) == 0:
+                    text_not_empty = i['name']
+                f = Film(
+                    author=user,
+                    id=int('0'+_obj['id']),
+                    name=_obj['name'],
+                    url=_obj['url'],
+                    studio=_obj['studio'],
+                    year=int('0'+_obj['year']),
+                    color=_obj['color'],
+                    film_type=_obj['type'],
+                    index=_obj['index'],
+                    number=_obj['number'],
+                    film_name=_obj['film'],
+                    quality=_obj['quality'],
+                    text=text_not_empty)
 
             return {
-                'tag_categories': tag_cats,
+                'tag_categories': tag_categories,
                 'tags': tags,
-                # 'groups': groups,
+                'groups': groups,
             }
 
-        models = genUnboundedObjects(obj)
-        print(f"Categories: {len(models['tag_categories'])}")
-        print(f"Tags: {len(models['tags'])}")
+        # models = genUnboundedObjects(obj)
+        # print(f"Categories: {len(models['tag_categories'])}")
+        # print(f"Tags: {len(models['tags'])}")
+        # print(f"Groups: {len(models['groups'])}")
+
+        print(obj[4356])
 
         def slow():
             pbar = tqdm(obj, desc='Importing Films')
@@ -376,8 +420,6 @@ class Command(BaseCommand):
                         gr, gr_create = GroupCategory.objects.using(db_name).get_or_create(
                             name=group,
                             slug=self.translitSlug(group))
-                        # if gr_create:
-                        #     pbar.set_description(f'Group   {group[:5]}..')
                         f.groups.add(gr)
 
                     # Create dict for Foreign keys
@@ -395,9 +437,6 @@ class Command(BaseCommand):
                         select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
                             name=tag_cat(c),
                             slug=c_slug)
-                        # if tag_cat_created:
-                        #     pbar.set_description(
-                        #         f'Tag cat. {tag_cat(c)[:5]}..')
 
                         for tag in cat:
                             if tag != '':
@@ -406,9 +445,6 @@ class Command(BaseCommand):
                                     name=tag,
                                     slug=tag_slug,
                                     category=select_tag_cat)
-                                # if tag_created:
-                                # pbar.set_description(
-                                #     f'{tag_slug(c)[:5]} for {tag_cat(c)[:5]}')
                                 f.tags.add(select_tag)
                         f.category = select_tag_cat
 
