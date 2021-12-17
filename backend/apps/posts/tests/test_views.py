@@ -105,37 +105,40 @@ class PaginatorViewsTest(TestModelFactory):
     def test_paginator_contains_all_records(self):
         """Проверка: Есть ли все записи в паджинаторе"""
         cache.clear()
-        response = self.guest_client.get(reverse('posts:index'))
+        response = self.guest_client.get(
+            reverse('posts:index')+'?post_view=True')
         self.assertEqual(
             response.context['page_obj'].paginator.count, self.number_of_posts)
 
     def test_index_page_contains_ten_records(self):
-        """Проверка: количество постов на первой странице равно 10."""
+        """Проверка: количество постов на первой странице равно 12."""
         cache.clear()
-        response = self.guest_client.get(reverse('posts:index'))
-        self.assertEqual(len(response.context['page_obj']), 10)
+        response = self.guest_client.get(
+            reverse('posts:index')+'?post_view=True')
+        test = response.context['page_obj'].paginator
+        self.assertEqual(len(response.context['page_obj']), 12)
 
     def test_group_detail_contains_remainder_records(self):
         """Проверка: на последней странице group_detail должно быть
         % десяти от всего количества постов."""
-        remainder = self.number_of_posts % 10
+        remainder = self.number_of_posts % 12
         response = self.client.get(
             reverse('posts:group_detail', kwargs={
-                    'group_slug': self.group.slug}) + f'?page={remainder}'
+                    'group_slug': self.group.slug}) + f'?page={remainder}' + '&post_view=True'
         )
-        last_page_posts_num = response.context['page_obj'].paginator.count % 10
+        last_page_posts_num = response.context['page_obj'].paginator.count % 12
         self.assertEqual(last_page_posts_num, remainder)
 
     def test_profile_contains_remainder_records(self):
         """Проверка: на последней странице profile должно быть
         % десяти от всего количества постов."""
-        remainder = self.number_of_posts % 10
+        remainder = self.number_of_posts % 12
         response = self.client.get(
             reverse('posts:profile', kwargs={
                     'username': self.auth_user.username
-                    }) + f'?page={remainder}'
+                    }) + f'?page={remainder}' + '&post_view=True'
         )
-        last_page_posts_num = response.context['page_obj'].paginator.count % 10
+        last_page_posts_num = response.context['page_obj'].paginator.count % 12
         self.assertEqual(last_page_posts_num, remainder)
 
 

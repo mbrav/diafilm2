@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.test import Client, TestCase
 from PIL import Image, ImageDraw, ImageFont
 
-from apps.posts.models import Comment, Group, Post
+from apps.posts.models import Comment, GroupCategory, Post
 
 User = get_user_model()
 
@@ -63,8 +63,8 @@ class TestModelFactory(TestCase):
         self.authorized_client = Client()
         self.guest_client = Client()
         self.authorized_client.force_login(self.auth_user)
-        self.group = Group.objects.create(
-            title='Тестовая группа',
+        self.group = GroupCategory.objects.create(
+            name='Тестовая группа',
             slug='test_group_slug',
             description='Тестовое описание',
         )
@@ -76,10 +76,10 @@ class TestModelFactory(TestCase):
             new_p = Post(
                 text=f'Тестовой пост №{p}',
                 author=self.auth_user,
-                group=self.group,
                 image=test_image,
                 id=p,
             )
+            new_p.groups.add(self.group)
             posts.append(new_p)
 
         Post.objects.bulk_create(objs=posts, batch_size=100)
