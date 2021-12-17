@@ -192,24 +192,6 @@ class Command(BaseCommand):
 
     def __init__(self):
         self.DEBUG = False
-        file_db = settings.DATABASES[self.file_db_name]['NAME']
-        memory_db = settings.DATABASES[self.memory_db_name]['NAME']
-        self.file_con = sqlite3.connect(file_db)
-        self.memory_con = sqlite3.connect(memory_db)
-
-        # Read database to tempfile
-        # con = sqlite3.connect(app.config['SQLITE_DATABASE'])
-        tempfile = StringIO()
-        for line in self.file_con.iterdump():
-            tempfile.write('%s\n' % line)
-        self.file_con.close()
-        tempfile.seek(0)
-
-        # Create a database in memory and import from tempfile
-        # app.sqlite = sqlite3.connect(":memory:")
-        self.memory_con.cursor().executescript(tempfile.read())
-        self.memory_con.commit()
-        self.memory_con.row_factory = sqlite3.Row
 
     def add_arguments(self, parser):
         """Optional arguments"""
@@ -222,6 +204,8 @@ class Command(BaseCommand):
                             help='Import tables into memory then dump to sqlitefile. 10x Faster.', )
         parser.add_argument('-d', '--debug', action='store_true',
                             help='Debuging option', )
+        parser.add_argument('-t', '--test', action='store_true',
+                            help='Do nothing, check if imports are working', )
 
     def handle(self, *args, **kwargs):
         """Handle the command"""
@@ -230,6 +214,7 @@ class Command(BaseCommand):
         scrape = kwargs['scrape']
         memory = kwargs['memory']
         debug = kwargs['debug']
+        test = kwargs['test']
 
         if debug:
             self.DEBUG = True
@@ -245,6 +230,9 @@ class Command(BaseCommand):
             self.sqliteLoadToMemory()
             self.importFilmsFromJson(self.memory_db_name)
             self.sqliteDumpFromMemory()
+
+        if test:
+            pass
 
     def translitSlug(self, string):
         string = translit(string, 'ru', reversed=True).lower()

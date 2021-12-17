@@ -1,0 +1,47 @@
+name: Django and Pytest
+
+on:
+    push:
+        branches:
+            - "**"
+    pull_request:
+        branches:
+            - "**"
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            max-parallel: 4
+            matrix:
+                python-version:
+                    - 3.9
+        steps:
+            - uses: actions/checkout@v2
+            - name: "Set up Python ${{ matrix.python-version }}"
+              uses: actions/setup-python@v2
+              with:
+                  python-version: "${{ matrix.python-version }}"
+            - name: Install Dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt
+                  pip install -r requirements-dev.txt
+            - name: Config .env
+              run: |
+                  mv backend/diafilm/dev.env backend/diafilm/.env
+            - name: Run Django migrations
+              run: |
+                  python backend/manage.py makemigrations
+                  python backend/manage.py migrate
+            - name: Run Film-scrape script
+              run: |
+                  cd backend
+                  python manage.py film_scrape -t
+            - name: Run flake8
+              run: |
+                  flake8 backend --count --exit-zero --max-complexity=10 --max-line-length=79 --statistics --config=backend/setup.cfg
+            - name: Run Django Tests
+              run: |
+                  cd backend
+                  python manage.py test
