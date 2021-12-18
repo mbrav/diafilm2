@@ -10,10 +10,10 @@
 {% if page_obj.object_list.0.image %}
 {% load thumbnail %}
 {% thumbnail page_obj.object_list.0.image "600x200" crop="center" as im %}
-<header class="masthead py-6" style="background-image: url('{{ im.url }}">
+<header class="masthead py-6" style="background-image: url('{{ im.url }});">
   {% endthumbnail %}
   {% else %}
-  <header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-4.jpg' %}')">
+  <header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-4.jpg' %}');">
     {% endif %}
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">

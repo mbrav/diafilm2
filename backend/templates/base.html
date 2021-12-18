@@ -1,9 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
-
+  
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  
+  {% include 'meta.html' %}
 
   <title>{% block title %} {% endblock %}</title>
   <link rel="icon" type="image/x-icon" href="{% static 'img/fav/favicon.ico' %}" />
@@ -29,7 +32,7 @@
     integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
     crossorigin="anonymous"></script>
   <!-- Core theme JS-->
-  <script src="{% static 'js/scripts.js' %}?v=99.9"></script>
+  <script src="{% static 'js/scripts.js' %}"></script>
 </body>
 
 </html>
