@@ -9,22 +9,22 @@
 {% load thumbnail %}
 {% thumbnail post.image "600x200" crop="center" as im %}
 <header class="masthead py-6" style="background-image: url('{{ im.url }}')">
-{% endthumbnail %}
-{% else %}
-<header class="masthead py-6" style="background-image: url('{{ post.cover.image.url }}')">
-{% endif %}
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-9 col-xl-8">
-        <div class="post-heading">
+  {% endthumbnail %}
+  {% else %}
+  <header class="masthead py-6" style="background-image: url('{{ post.cover.image.url }}')">
+    {% endif %}
+    <div class="container position-relative px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-9 col-xl-8">
+          <div class="post-heading">
             <span class="meta">
               <h3 class="subheading mb-2"> Групп{%if post.groups.all.count > 1%}ы{% else %}а{% endif %}
-              {% for group in post.groups.all %}
+                {% for group in post.groups.all %}
                 <a href="{% url "posts:group_detail" group_slug=group.slug %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-dark btn-sm">
-                <i class="bi bi-folder"></i> {{ group.name }}
-                <i>{{ group }}</i>
+                  <i class="bi bi-folder"></i> {{ group.name }}
+                  <i>{{ group }}</i>
                 </a>
-              {% endfor %}
+                {% endfor %}
               </h3>
               {% comment %} {% if frames %}
               <a href='{% url "posts:diafilms_random" %}' class="btn btn-outline-dark btn-sm">
@@ -35,61 +35,63 @@
             {% if frames %}<h1>«{{ post.name }}»</h1>{% endif %}
             <h2 class="subheading mb-3">
               <span class="highlight-text-color">
-                <i class="bi bi-person-fill"></i> 
+                <i class="bi bi-person-fill"></i>
               </span>
               {{ post.author.username }}
               {% if post.author != user %}
-                {% if following %}
-                  <a href="{% url "posts:unfollow_user" username=post.author.username %}" class="btn btn-warning btn-sm" role="button">
-                    <i class="bi bi-star"></i> Отписаться
-                  </a>
-                {% else %}
-                  <a href="{% url "posts:follow_user" username=post.author.username %}" class="btn btn-success btn-sm" role="button">
-                    <i class="bi bi-star-fill"></i> Подписаться
-                  </a>
-                {% endif %}
+              {% if following %}
+              <a href="{% url "posts:unfollow_user" username=post.author.username %}" class="btn btn-warning btn-sm"
+                role="button">
+                <i class="bi bi-star"></i> Отписаться
+              </a>
+              {% else %}
+              <a href="{% url "posts:follow_user" username=post.author.username %}" class="btn btn-success btn-sm"
+                role="button">
+                <i class="bi bi-star-fill"></i> Подписаться
+              </a>
+              {% endif %}
               {% endif %}
               <a href="{% url "posts:profile" username=post.author.username %}{% if not frames %}?post_view=True{% endif %}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-film"></i> {% if frames %}Диафильмы{% else %}Посты{% endif %} автора
                 <span class="badge">
-                  {{ posts_by_user }}
+                  {{posts_by_user }}
                 </span>
               </a>
             </h2>
-            <h5><i class="bi bi-calendar-event"></i> {{ post.pub_date  }}</h5>
+            <h5><i class="bi bi-calendar-event"></i> {{ post.pub_date }}</h5>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</header>
-{% endcache %}
-<main class="mb-4">
-  {% if frames %}
+  </header>
+  {% endcache %}
+  <main class="mb-4">
+    {% if frames %}
     {% include 'includes/post_is_diafilm.html' %}
-  {% endif %}
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-11 col-lg-9 col-xl-8">
-        {{ post.text|linebreaksbr }}
-        {% if is_edit %}
-        <div class="d-flex justify-content-end">
-          <!-- эта кнопка видна только автору -->
-          <a class="btn btn-sm btn-info mx-1" href="{% url "posts:post_edit" post_id=post.id %}">
-            <i class="bi bi-pencil"></i> Редактировать
-          </a>
-          <a class="btn btn-sm btn-danger mx-1" href="{% url "posts:post_delete" post_id=post.id %}">
-            <i class="bi bi-trash"></i> Удалить
-          </a>
-        </div>
-        {% endif %}
-        {% cache 600 comments post.comments.all.count %}
+    {% endif %}
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-11 col-lg-9 col-xl-8">
+          {{ post.text|linebreaksbr }}
+          {% if is_edit %}
+          <div class="d-flex justify-content-end">
+            <!-- эта кнопка видна только автору -->
+            <a class="btn btn-sm btn-info mx-1" href="{% url "posts:post_edit" post_id=post.id %}">
+              <i class="bi bi-pencil"></i> Редактировать
+            </a>
+            <a class="btn btn-sm btn-danger mx-1" href="{% url "posts:post_delete" post_id=post.id %}">
+              <i class="bi bi-trash"></i> Удалить
+            </a>
+          </div>
+          {% endif %}
+          {% cache 600 comments post.comments.all.count %}
           {% include 'includes/comments.html' %}
-        {% endcache %}
-        {% cache 6000 comment_form post.id %}
+          {% endcache %}
+          {% cache 6000 comment_form post.id %}
           {% include 'includes/comment_form.html' %}
-        {% endcache %}
+          {% endcache %}
+        </div>
       </div>
     </div>
-  </div>
-</main>
-{% endblock %}
+  </main>
+  {% endblock %}

@@ -2,7 +2,7 @@
   <div class="col-sm-12 col-lg-6 col-xl-5 pb-2 justify-content-left">
     <a href="{% url "posts:post_search" %}" class="btn btn-secondary btn-sm" role="button">
       <i class="bi bi-search"></i> Поиск
-    </a> 
+    </a>
     <a href="{% url "posts:group_list" %}" class="btn btn-secondary btn-sm" role="button">
       <i class="bi bi-folder"></i> Все группы
     </a>
@@ -11,10 +11,10 @@
     </a>
   </div>
   <div class="col-sm-12 col-lg-6 col-xl-7">
-  {% if post_view %}
+    {% if post_view %}
     {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
-  {% else %}
+    {% else %}
     {% include 'includes/paginator.html' %}
-  {% endif %}
+    {% endif %}
   </div>
 </div>

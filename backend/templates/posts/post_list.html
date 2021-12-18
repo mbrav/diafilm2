@@ -44,20 +44,18 @@
 <!-- Основной Контент-->
 <main class="mb-4">
   <div class="container px-4 px-lg-5">
-  {% include 'includes/switcher.html' %}
-  {% include 'includes/content-bar.html' %}
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
-    {% for post in page_obj %}
+    {% include 'includes/switcher.html' %}
+    {% include 'includes/content-bar.html' %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
+      {% for post in page_obj %}
       {% include 'includes/post_card.html' %}
-    {% endfor %}
-  </div>
-  {% if post_view %}
+      {% endfor %}
+    </div>
+    {% if post_view %}
     {% include 'includes/paginator.html' with url_vars="&post_view=True" %}
-  {% else %}
+    {% else %}
     {% include 'includes/paginator.html' %}
-  {% endif %}
+    {% endif %}
   </div>
 </main>
 {% endblock %}
-
-

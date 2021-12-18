@@ -6,9 +6,7 @@
 {% load static %}
 {% load cache %}
 {% cache 6000 post_search_header query %}
-<header
-  class="masthead py-6"
-  style="background-image: url('{% static 'img/bg/bg-4.jpg' %}')">
+<header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-4.jpg' %}')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -16,7 +14,7 @@
           <h1>
             <i class="bi bi-search highlight-text-color"></i>
             <span class="highlight-text-color">
-               Пойск
+              Пойск
             </span>
           </h1>
           {% if query %}
@@ -68,20 +66,20 @@
                 <a href="{% url "posts:post" post_id=post.id %}"><i>«{{ post.name }}»</i></a>
               </td>
               <td>
-              {% for group in post.groups.all %}
+                {% for group in post.groups.all %}
                 <a href="{% url "posts:group_detail" group_slug=group.slug %}">
                   <i class="bi bi-folder"></i>
                   {{ group.name }}
                 </a><br>
-              {% endfor %}
+                {% endfor %}
               </td>
               <td>
                 <a href="{% url "posts:post" post_id=post.id %}">
                   {% if post.year != 0 %}
-                    {{ post.year }}
+                  {{ post.year }}
                   {% else %}
-                    -
-                  {% endif %} 
+                  -
+                  {% endif %}
                 </a>
               </td>
             </tr>
@@ -90,7 +88,7 @@
         </table>
       </div>
     </div>
-  {% include 'includes/paginator.html' %}
+    {% include 'includes/paginator.html' %}
   </div>
 </main>
 {% endblock %}

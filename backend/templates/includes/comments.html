@@ -10,7 +10,7 @@
             <span>
               <small class="font-weight-bold text-primary mx-2">
                 <span class="highlight-text-color">
-                  <i class="bi bi-person-fill"></i> 
+                  <i class="bi bi-person-fill"></i>
                 </span>
                 <b>
                   <a href="{% url "posts:profile" username=comment.author.username %}">{{ comment.author.username }}</a>
@@ -18,7 +18,7 @@
               </small>
             </span>
             <small>{{ comment.created }}</small>
-          </div> 
+          </div>
         </div>
         <p class="mx-2">{{ comment.text }}</p>
         {% if comment.author == request.user %}

@@ -7,20 +7,17 @@
 {% block content %}
 {% cache 6000 contact %}
 <!-- Шапка Страницы-->
-<header
-  class="masthead py-6"
-  style="background-image: url('{% static 'img/bg/bg-2.jpg' %}')"
->
-  <div class="container position-relative px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
-        <div class="page-heading">
-          <h1>Контакт</h1>
-          <span class="subheading">Есть Вопросы? Свяжитесь!</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<header class="masthead py-6" style="background-image: url('{% static 'img/bg/bg-2.jpg' %}')">
+	<div class="container position-relative px-4 px-lg-5">
+		<div class="row gx-4 gx-lg-5 justify-content-center">
+			<div class="col-md-10 col-lg-8 col-xl-7">
+				<div class="page-heading">
+					<h1>Контакт</h1>
+					<span class="subheading">Есть Вопросы? Свяжитесь!</span>
+				</div>
+			</div>
+		</div>
+	</div>
 </header>
 <!-- Основной Контент-->
 <main class="mb-4">
@@ -31,18 +28,15 @@
 					Хотите с нами связаться? Вот моя контактная информация, я
 					свяжусь с вами как можно скорее!
 				</p>
-				<a class="btn btn-outline-primary btn-lg"
-					href="https://t.me/absurdcomrade"	>
+				<a class="btn btn-outline-primary btn-lg" href="https://t.me/absurdcomrade">
 					<i class="bi bi-telegram"></i>
 					Telegram
 				</a>
-				<a class="btn btn-outline-secondary btn-lg"
-					href="mailto:mbraverman96@gmail.com"	>
+				<a class="btn btn-outline-secondary btn-lg" href="mailto:mbraverman96@gmail.com">
 					<i class="bi bi-envelope"></i>
 					Почта
 				</a>
-				<a class="btn btn-outline-secondary btn-lg"
-					href="https://github.com/mbrav"	>
+				<a class="btn btn-outline-secondary btn-lg" href="https://github.com/mbrav">
 					<i class="bi bi-github"></i>
 					Github
 				</a>
@@ -60,22 +54,15 @@
 						</div>
 						<div class="form-floating">
 							{{ form.subject }}
-							<label for="id_subject"
-								>{{ form.subject.label }}</label
-							>
+							<label for="id_subject">{{ form.subject.label }}</label>
 						</div>
 						<div class="form-floating">
 							{{ form.message }}
-							<label for="id_message"
-								>{{ form.message.label }}</label
-							>
+							<label for="id_message">{{ form.message.label }}</label>
 						</div>
 						{% include "includes/form_errors.html" %}
 						<br />
-						<button
-							type="submit"
-							class="btn btn-primary text-uppercase"
-						>
+						<button type="submit" class="btn btn-primary text-uppercase">
 							Отправить
 						</button>
 					</form>

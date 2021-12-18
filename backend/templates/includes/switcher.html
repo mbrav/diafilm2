@@ -1,19 +1,13 @@
 <div class="row my-3">
   <ul class="nav nav-tabs">
     <li class="nav-item">
-      <a
-        class="nav-link {% if index %}active{% endif %}"
-        href="{% url 'posts:index' %}"
-      >
+      <a class="nav-link {% if index %}active{% endif %}" href="{% url 'posts:index' %}">
         <i class="bi bi-files"></i> Все Записи
       </a>
     </li>
     {% if user.is_authenticated %}
     <li class="nav-item">
-      <a
-        class="nav-link {% if following %}active{% endif %}"
-        href="{% url 'posts:post_follow_list' %}"
-      >
+      <a class="nav-link {% if following %}active{% endif %}" href="{% url 'posts:post_follow_list' %}">
         <i class="bi bi-broadcast"></i> Подписки
       </a>
     </li>
