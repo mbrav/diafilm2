@@ -1,8 +1,25 @@
+from django.contrib.sitemaps import views as sitemaps_views
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
-from . import views
+from . import sitemaps, views
+
+sitemaps = {
+    'posts': sitemaps.PostsSitemap,
+    'groups': sitemaps.GroupsSitemap,
+    'tags': sitemaps.TagsSitemap,
+}
 
 urlpatterns = [
+    # sitemaps
+    path('sitemap.xml',
+         cache_page(86400)(sitemaps_views.index),
+         {'sitemaps': sitemaps, 'sitemap_url_name': 'posts:sitemaps'}),
+    path('sitemap-<section>.xml',
+         cache_page(86400)(sitemaps_views.sitemap),
+         {'sitemaps': sitemaps}, name='sitemaps'),
+
     # Основное
     path('', views.post_list, name='index'),
     path('diafilms/random/', views.diafilms_random, name='diafilms_random'),
@@ -30,5 +47,4 @@ urlpatterns = [
          views.add_comment, name='add_comment'),
     path('posts/<int:post_id>/comment/delete/<int:comment_id>/',
          views.delete_comment, name='delete_comment'),
-
 ]
