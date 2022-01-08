@@ -1,8 +1,7 @@
-from django.contrib.sitemaps import GenericSitemap, Sitemap
+from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from . import models
-from .models import GroupCategory, Post, Tag, TagCategory
+from .models import GroupCategory, Post, Tag
 
 
 class PostsSitemap(Sitemap):

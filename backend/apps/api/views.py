@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import filters, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 

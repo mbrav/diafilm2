@@ -10,6 +10,7 @@ from googleapiclient.discovery import build
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
+
 def main():
     """Shows basic usage of the Gmail API.
     Lists the user's Gmail labels.
@@ -44,6 +45,7 @@ def main():
         print('Labels:')
         for label in labels:
             print(label['name'])
+
 
 if __name__ == '__main__':
     main()

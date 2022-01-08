@@ -2,22 +2,19 @@ import glob
 import json
 import os
 import re
-import sqlite3
-from io import StringIO
 from pathlib import Path
-from tqdm import tqdm
 
 import requests
+from apps.diafilms.models import Film, FilmCover, Frame, Image
+from apps.posts.models import GroupCategory, Tag, TagCategory
 from bs4 import BeautifulSoup
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.template.defaultfilters import slugify
+from tqdm import tqdm
 from transliterate import translit
 
-from .utils.util import timer, async_looper
-from apps.diafilms.models import Film, FilmCover, Frame, Image
-from apps.posts.models import GroupCategory, Tag, TagCategory
-from diafilm import settings
+from .utils.util import async_looper
 
 # Find the project base directory
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -286,7 +283,7 @@ class Command(BaseCommand):
                 new_cat = TagCategory(
                     name=tag_cat(t_c),
                     slug=c_slug,
-                    id=len(tag_cats)+1)
+                    id=len(tag_cats) + 1)
                 tag_cats.append(new_cat)
             TagCategory.objects.bulk_create(tag_cats)
 
@@ -319,7 +316,7 @@ class Command(BaseCommand):
 
                         if slug_check is False:
                             new_tag = Tag(
-                                id=len(tags)+1,
+                                id=len(tags) + 1,
                                 name=name,
                                 slug=tag_slug,
                                 category=category,
@@ -338,7 +335,7 @@ class Command(BaseCommand):
                     if slug_check is False:
                         # print(name_check, slug_check, group, slug)
                         gr = GroupCategory(
-                            id=len(groups)+1,
+                            id=len(groups) + 1,
                             name=group,
                             slug=self.translitSlug(group))
                         groups.append(gr)
@@ -351,11 +348,11 @@ class Command(BaseCommand):
                     text_not_empty = _obj['name']
                 f = Film(
                     author=user,
-                    id=int('0'+_obj['id']),
+                    id=int('0' + _obj['id']),
                     name=_obj['name'],
                     url=_obj['url'],
                     studio=_obj['studio'],
-                    year=int('0'+_obj['year']),
+                    year=int('0' + _obj['year']),
                     color=_obj['color'],
                     film_type=_obj['type'],
                     index=_obj['index'],
@@ -402,11 +399,11 @@ class Command(BaseCommand):
                         text_not_empty = i['name']
                     f = Film.objects.using(db_name).create(
                         author=user,
-                        id=int('0'+i['id']),
+                        id=int('0' + i['id']),
                         name=i['name'],
                         url=i['url'],
                         studio=i['studio'],
-                        year=int('0'+i['year']),
+                        year=int('0' + i['year']),
                         color=i['color'],
                         film_type=i['type'],
                         index=i['index'],
