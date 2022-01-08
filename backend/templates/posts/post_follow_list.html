@@ -14,7 +14,8 @@
             <span class="highlight-text-color">Ваши</span> подписки
           </h1>
           <span class="subheading"><b>Всего подписок: {{ following|length }}</b></span>
-          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}: {{ page_obj.paginator.count }}</b></span>
+          <span class="subheading"><b>Всего {% if post_view %}постов{% else %}диафильмов{% endif %}:
+              {{ page_obj.paginator.count }}</b></span>
         </div>
       </div>
     </div>

@@ -24,7 +24,8 @@
         {% if comment.author == request.user %}
         <div class="action d-flex justify-content-end">
           <small>
-            <a class="btn btn-danger btn-sm" href="{% url "posts:delete_comment" post_id=post.id comment_id=comment.id %}">Удалить</a>
+            <a class="btn btn-danger btn-sm"
+              href="{% url "posts:delete_comment" post_id=post.id comment_id=comment.id %}">Удалить</a>
           </small>
         </div>
         {% endif %}

@@ -1,8 +1,0 @@
-
-## Development
-markdown 
-flake8
-autopep8
-transliterate
-beautifulsoup4
-tqdm
