@@ -1,3 +1,5 @@
+[![.github/workflows/pytest.yml](https://github.com/mbrav/diafilm2/actions/workflows/pytest.yml/badge.svg)](https://github.com/mbrav/diafilm2/actions/workflows/pytest.yml)
+
 # diafilm2
 
 «Δиа Фильм²» – это проект, который разрабатывался для курса Яндекс Практикум . Не исключено, что проект получит дальнейшее внимание и его развитие продолжится. На данный момент проект будет сохранен в том виде, в котором он сейчас находится.
