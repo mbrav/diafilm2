@@ -20,10 +20,11 @@ def post_list(request):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
-            id__in=films).all().order_by('-pub_date')
+        post_list = Post.objects.select_related('author').prefetch_related(
+            'groups').exclude(id__in=films).all().order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
+        post_list = Film.objects.select_related(
+            'author', 'cover').prefetch_related(
             'groups', 'cover__image').all().order_by('-id')
 
     paginator = Paginator(post_list, 12)
@@ -49,11 +50,15 @@ def profile(request, username):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
-            id__in=films).filter(author=author).order_by('-pub_date')
+        post_list = Post.objects.select_related('author').prefetch_related(
+            'groups').exclude(
+            id__in=films).filter(
+            author=author).order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
-            'groups', 'cover__image').filter(author=author).order_by('-id')
+        post_list = Film.objects.select_related(
+            'author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(
+            author=author).order_by('-id')
 
     following = False
     if request.user.is_authenticated:
@@ -82,11 +87,15 @@ def group_detail(request, group_slug):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
-            id__in=films).filter(groups=group).order_by('-pub_date')
+        post_list = Post.objects.select_related('author').prefetch_related(
+            'groups').exclude(
+            id__in=films).filter(
+            groups=group).order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
-            'groups', 'cover__image').filter(groups=group).order_by('-id')
+        post_list = Film.objects.select_related(
+            'author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(
+            groups=group).order_by('-id')
 
     paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
@@ -154,11 +163,15 @@ def tag_detail(request, tag_category_slug, tag_slug):
     post_list = None
     if post_view:
         films = Film.objects.all().values_list('id')
-        post_list = Post.objects.select_related('author').prefetch_related('groups').exclude(
-            id__in=films).filter(tags=tag).order_by('-pub_date')
+        post_list = Post.objects.select_related('author').prefetch_related(
+            'groups').exclude(
+            id__in=films).filter(
+            tags=tag).order_by('-pub_date')
     else:
-        post_list = Film.objects.select_related('author', 'cover').prefetch_related(
-            'groups', 'cover__image').filter(tags=tag).order_by('-id')
+        post_list = Film.objects.select_related(
+            'author', 'cover').prefetch_related(
+            'groups', 'cover__image').filter(
+            tags=tag).order_by('-id')
 
     paginator = Paginator(post_list, 12)
     page = paginator.get_page(page_number)
@@ -208,12 +221,15 @@ def diafilms_random(request):
 def post(request, post_id):
     frames, post = None, None
     if Film.objects.filter(id=post_id).exists():
-        post = get_object_or_404(Film.objects.select_related('author', 'cover').prefetch_related(
-            'comments__post', 'comments__author', 'frames__film', 'tags', 'tags__category'), id=post_id)
+        post = get_object_or_404(
+            Film.objects.select_related('author', 'cover').prefetch_related(
+                'comments__post', 'comments__author', 'frames__film', 'tags',
+                'tags__category'),
+            id=post_id)
         frames = post.frames
     else:
-        post = get_object_or_404(Post.objects.select_related(
-            'author').prefetch_related('comments__post', 'comments__author', 'tags', 'tags__category'), id=post_id)
+        post = get_object_or_404(Post.objects.select_related('author').prefetch_related(
+            'comments__post', 'comments__author', 'tags', 'tags__category'), id=post_id)
 
     posts_by_user = Post.objects.filter(
         author=post.author).count()
@@ -325,7 +341,8 @@ def follow_index(request):
         user=request.user).values_list('author')
     post_list = None
     if post_view:
-        post_list = Film.objects.select_related('group', 'author', 'cover').filter(
+        post_list = Film.objects.select_related(
+            'group', 'author', 'cover').filter(
             author__in=usernames).order_by('-id')
     else:
         films = Film.objects.all().values_list('id')

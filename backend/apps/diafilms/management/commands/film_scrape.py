@@ -148,7 +148,8 @@ def scrapeFilms(table):
             # Set description
             meta['description'] = desc.strip()
             # Set categories
-            for a in txt_with_category.find_all(href=re.compile('diafilmy.su/diafilmy/')):
+            for a in txt_with_category.find_all(
+                    href=re.compile('diafilmy.su/diafilmy/')):
                 meta['categories'].append(a.get_text().strip())
             # Get gallery images
             for img in slide.find_all('img'):
@@ -192,13 +193,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         """Optional arguments"""
-        parser.add_argument('-i', '--import', action='store_true',
-                            help=f'Import files into db from {film_json_path}', )
+        parser.add_argument(
+            '-i', '--import', action='store_true',
+            help=f'Import files into db from {film_json_path}',)
         parser.add_argument('-s', '--scrape', action='store_true',
                             help=f'Scrape new films and save into {HTML_DIR} \
                             parse, and save JSON to {film_json_path}', )
-        parser.add_argument('-m', '--memory', action='store_true',
-                            help='Import tables into memory then dump to sqlitefile. 10x Faster.', )
+        parser.add_argument(
+            '-m', '--memory', action='store_true',
+            help='Import tables into memory then dump to sqlitefile. 10x Faster.',)
         parser.add_argument('-d', '--debug', action='store_true',
                             help='Debuging option', )
         parser.add_argument('-t', '--test', action='store_true',
@@ -415,8 +418,7 @@ class Command(BaseCommand):
 
                     for group in i['categories']:
                         gr, gr_create = GroupCategory.objects.using(db_name).get_or_create(
-                            name=group,
-                            slug=self.translitSlug(group))
+                            name=group, slug=self.translitSlug(group))
                         f.groups.add(gr)
 
                     # Create dict for Foreign keys
@@ -431,16 +433,15 @@ class Command(BaseCommand):
 
                     for c, cat in tag_categories.items():
                         c_slug = self.translitSlug(c)
-                        select_tag_cat, tag_cat_created = TagCategory.objects.using(db_name).get_or_create(
-                            name=tag_cat(c),
-                            slug=c_slug)
+                        select_tag_cat, tag_cat_created = TagCategory.objects.using(
+                            db_name).get_or_create(name=tag_cat(c), slug=c_slug)
 
                         for tag in cat:
                             if tag != '':
                                 tag_slug = self.translitSlug(tag)
-                                select_tag, tag_created = Tag.objects.using(db_name).get_or_create(
-                                    name=tag,
-                                    slug=tag_slug,
+                                select_tag, tag_created = Tag.objects.using(
+                                    db_name).get_or_create(
+                                    name=tag, slug=tag_slug,
                                     category=select_tag_cat)
                                 f.tags.add(select_tag)
                         f.category = select_tag_cat

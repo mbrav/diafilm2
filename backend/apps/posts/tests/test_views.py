@@ -1,8 +1,7 @@
+from apps.posts.models import Follow
 from django import forms
 from django.core.cache import cache
 from django.urls import reverse
-
-from apps.posts.models import Follow
 
 from .test_factory import TestModelFactory
 
@@ -106,7 +105,7 @@ class PaginatorViewsTest(TestModelFactory):
         """Проверка: Есть ли все записи в паджинаторе"""
         cache.clear()
         response = self.guest_client.get(
-            reverse('posts:index')+'?post_view=True')
+            reverse('posts:index') + '?post_view=True')
         self.assertEqual(
             response.context['page_obj'].paginator.count, self.number_of_posts)
 
@@ -114,7 +113,7 @@ class PaginatorViewsTest(TestModelFactory):
         """Проверка: количество постов на первой странице равно 12."""
         cache.clear()
         response = self.guest_client.get(
-            reverse('posts:index')+'?post_view=True')
+            reverse('posts:index') + '?post_view=True')
         test = response.context['page_obj'].paginator
         self.assertEqual(len(response.context['page_obj']), 12)
 
