@@ -1,4 +1,5 @@
 [![.github/workflows/pytest.yml](https://github.com/mbrav/diafilm2/actions/workflows/pytest.yml/badge.svg)](https://github.com/mbrav/diafilm2/actions/workflows/pytest.yml)
+[![wakatime](https://wakatime.com/badge/user/54ad05ce-f39b-4fa3-9f2a-6fe4b1c53ba4/project/bc1260ce-04cd-47aa-a976-a2e3247fa31a.svg)](https://wakatime.com/badge/user/54ad05ce-f39b-4fa3-9f2a-6fe4b1c53ba4/project/bc1260ce-04cd-47aa-a976-a2e3247fa31a)
 
 # diafilm2
 
